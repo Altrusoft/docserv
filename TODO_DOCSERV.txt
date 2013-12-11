@@ -1,0 +1,55 @@
+# 
+# Copyright (c) 2013 Altrusoft AB.
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+# 
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+# 
+Per Steneskog, 2013-05-24
+
+Things that needs to be fixed in docserv
+
+Docs
+----
+- Remove/Update old README and SETUP
+- INSTALL.txt (admin guide)
+- USER_GUIDE.txt (usage, write and install template, template with code etc)
+- DEVELOPER.txt (dev guide, code structure)
+
+
+General
+-------
+- GPL copyright notice (or Apache? or LGPL?)
+- Keep the name "docserv"?
+- Make the tests less revealing (Anonymous invoice with names and fake prices)
+
+
+Functionality
+------------
+- Nested structures (lists within one entry probably does not work)
+- Avoid LibreOffice window popup
+- Possibility to upload (CRUD) template files, UI
+- Possibility to generate multiple files?
+- DocX? (ODT->DocX?) (DocX->PDF or DocX---(through ODT)--->PDF?)
+- Allow both FTL and VLC (through request-parameter? with FTL as default)
+
+
+Code Quality
+------------
+- Make possible to run integtests within Eclipse ("inputstream is not a zip")
+- Investigate what to remove to avoid duplicate commons-http (gives Eclipse errors)
+
+- More unit testing
+- Fix checkstyle warnings
+- No e.prinstStackTrace() (system.out is at least removed)
+- Improve logging (more logging and correct levels)
+
+- Analyze / Test-coverage Global.java
+- Extract things from Global and Application to separate methods
+- Investigate ("grep") TODOs in source code
+
+- Somehow invoke and put under VC my local end-to-end scripts for testing
+- Add tool to generate new expected-test-file whenever bits/libreoffice is changed
+- Make the tests less brittle

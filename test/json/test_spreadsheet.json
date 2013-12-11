@@ -1,0 +1,15 @@
+{ "year": 2012,
+  "rows" : [ { "cells" : [ { "value" : "Avdelning 1" },
+            { "value" : 40 },
+            { "value" : 60 }
+          ] },
+      { "cells" : [ { "value" : "Avdelning 2" },
+            { "value" : 12 },
+            { "value" : 6737 }
+          ] }
+    ],
+  "total" : { "cells" : [ { "value" : "Total" },
+          { "value" : 52 },
+          { "value" : 6800 }
+        ] }
+}

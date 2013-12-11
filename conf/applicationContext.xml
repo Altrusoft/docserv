@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (c) 2013 Altrusoft AB.
+  This Source Code Form is subject to the terms of the Mozilla Public
+  License, v. 2.0. If a copy of the MPL was not distributed with this
+  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="application" class="se.altrusoft.docserv.controllers.Application">
+		<property name="templates">
+			<map>
+				<entry key="SpreadsheetModel">
+					<bean class="se.altrusoft.docserv.models.SpreadsheetModel">
+						<property name="templateFile"
+							value="public/templates/SpreadsheetModel/template.ods" />
+						<property name="templateType" value="FREEMARKER" />
+						<property name="postProcessor">
+							<bean class="se.altrusoft.docserv.odsprocessor.SimpleODSProcessor" />
+						</property>
+					</bean>
+				</entry>
+				<entry key="invoiceOds">
+					<bean class="se.altrusoft.docserv.models.Invoice">
+						<property name="templateFile" value="public/templates/Invoice/template.ods" />
+					</bean>
+				</entry>
+				<entry key="invoiceOdt">
+					<bean class="se.altrusoft.docserv.models.Invoice">
+						<property name="templateFile" value="public/templates/Invoice/template.odt" />
+					</bean>
+				</entry>
+				<entry key="invoiceNoClassOdt">
+					<bean class="se.altrusoft.docserv.models.DynamicModel">
+						<property name="templateFile"
+							value="public/templates/Invoice_no_class/template.odt" />
+					</bean>
+				</entry>
+			</map>
+		</property>
+	</bean>
+</beans>
