@@ -6,21 +6,39 @@
  */
 package se.altrusoft.docserv.controllers;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public enum MimeType {
-	PDF("application/pdf", "writer_pdf_Export"), ODS(
-			"application/vnd.oasis.opendocument.spreadsheet"), ODT(
+	@SuppressWarnings("serial")
+	PDF("application/pdf", "writer_pdf_Export", new HashMap<String, Object>() {
+		{
+			// Generate PDF/A
+			put("SelectPdfVersion", 1);
+		}
+	}), ODS("application/vnd.oasis.opendocument.spreadsheet"), ODT(
 			"application/vnd.oasis.opendocument.text"), XLS(
 			"application/vnd.ms-excel", "MS Excel 97");
 	private String value;
 	private String convertFilterName;
+	private Map<String, Object> filterParameters;
 
 	MimeType(String value) {
 		this.value = value;
+		this.filterParameters = new HashMap<String, Object>();
 	}
 
 	MimeType(String value, String convertFilterName) {
 		this.value = value;
 		this.convertFilterName = convertFilterName;
+		this.filterParameters = new HashMap<String, Object>();
+	}
+
+	MimeType(String value, String convertFilterName,
+			Map<String, Object> filterParameters) {
+		this.value = value;
+		this.convertFilterName = convertFilterName;
+		this.filterParameters = filterParameters;
 	}
 
 	public String getValue() {
@@ -29,6 +47,10 @@ public enum MimeType {
 
 	public String getConvertFilterName() {
 		return convertFilterName;
+	}
+
+	public Map<String, Object> getFilterParameters() {
+		return filterParameters;
 	}
 
 	public static MimeType getMimeType(String mimeType) {

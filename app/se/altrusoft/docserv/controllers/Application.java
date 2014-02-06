@@ -149,7 +149,8 @@ public class Application extends Controller {
 
 					generatedDocumentOutputStream = convert(
 							generatedDocumentOutputStream,
-							mimeType.getConvertFilterName());
+							mimeType.getConvertFilterName(),
+							mimeType.getFilterParameters());
 				}
 			} else {
 				String warnMessage = "Unsupported mime-type: " + acceptHeader;
@@ -199,8 +200,9 @@ public class Application extends Controller {
 	}
 
 	private static ByteArrayOutputStream convert(
-			ByteArrayOutputStream odxStream, String targetFormat)
-			throws BootstrapException, Exception, IOException {
+			ByteArrayOutputStream odxStream, String targetFormat,
+			Map<String, Object> filterParameters) throws BootstrapException,
+			Exception, IOException {
 		// TODO: Can this be done once during app init?
 		XComponentContext xContext = Bootstrap.bootstrap();
 
@@ -215,7 +217,7 @@ public class Application extends Controller {
 					odxStream.toByteArray());
 			convertedOutputStream = new OOoOutputStream();
 			converter.convert(generatedODFInputStream, convertedOutputStream,
-					targetFormat);
+					targetFormat, filterParameters);
 
 			generatedPDFOutputStream.write(convertedOutputStream.toByteArray());
 		} finally {
