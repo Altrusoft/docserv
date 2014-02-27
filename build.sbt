@@ -17,8 +17,8 @@ libraryDependencies ++= Seq(
 	"fr.opensagres.xdocreport" % "fr.opensagres.xdocreport.converter" % "1.0.3",
 	"fr.opensagres.xdocreport" % "fr.opensagres.xdocreport.converter.odt.odfdom" % "1.0.3",
 	"fr.opensagres.xdocreport" % "fr.opensagres.xdocreport.itext.extension" % "1.0.3",
-  	"org.springframework" % "spring-context" % "3.2.4.RELEASE",
-    "commons-io" % "commons-io" % "1.4",
+	"org.springframework" % "spring-context" % "3.2.4.RELEASE",
+	"commons-io" % "commons-io" % "2.4",
 	"commons-collections" % "commons-collections" % "3.2.1",
 	"commons-lang" % "commons-lang" % "2.4",
 	"commons-configuration" % "commons-configuration" % "1.8",
@@ -36,6 +36,8 @@ libraryDependencies ++= Seq(
 )
 
 play.Project.playJavaSettings
+
+seq(sonar.settings :_*)
 
 packageArchetype.java_server
 
