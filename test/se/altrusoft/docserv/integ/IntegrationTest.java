@@ -243,6 +243,7 @@ public class IntegrationTest {
 					.getTextFromPage(pdfReader, 1));
 			// remove non-break space
 			nonWhiteSpace = nonWhiteSpace.replace("\u00A0", "");
+            nonWhiteSpace = nonWhiteSpace.replace("\u00AD", "-");
 		} catch (IOException e) {
 			throw e;
 		} finally {
