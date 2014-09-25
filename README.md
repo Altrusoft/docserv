@@ -15,7 +15,7 @@ Docserv
 Prerequisites
 -------------
 *    Libreoffice 4+ needs to be installed on the machine you're running Docserv from
-*    Play!Framework 2.1
+*    Play!Framework 2.2.1
 
 Download
 --------
@@ -27,7 +27,8 @@ The configuration can be found in the `conf` folder.
 *     `application.conf` contains configuration about logging, server address and port. You can also configure a local configuration directory, in which you would then place your own `applicationContext.xml`.
 *     `applicationContext.xml` contains information about which urls matches which templates.
 
-You need to make soft links for the libreoffice jars:
+You need to make soft links for the libreoffice jars.
+On Ubuntu:
 
     mkdir lib
     cd lib
@@ -35,6 +36,11 @@ You need to make soft links for the libreoffice jars:
     ln -s /usr/lib/libreoffice/ure-link/share/java/jurt.jar jurt.jar
     ln -s /usr/lib/libreoffice/ure-link/share/java/ridl.jar ridl.jar
     ln -s /usr/lib/libreoffice/program/classes/unoil.jar unoil.jar
+
+On Ubuntu 14.04 the libreoffice java bindings does not work.
+A fix:
+    sudo ln -s /usr/lib/ure/lib/libjpipe.so /usr/lib/libjpipe.so
+
 
 
 Running the application
