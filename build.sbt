@@ -35,6 +35,17 @@ libraryDependencies ++= Seq(
 	"com.itextpdf" % "itextpdf"  % "5.4.0" % "test"
 )
 
+def javaVersion: String = {
+	val ver = System.getenv("DOCSERV_JAVA_VERSION");
+	if (ver == null) {
+		"1.7";
+	} else {
+		ver;
+	}
+}
+
+javacOptions ++= Seq("-source", javaVersion, "-target", javaVersion)
+
 play.Project.playJavaSettings
 
 seq(sonar.settings :_*)
