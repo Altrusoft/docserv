@@ -3,6 +3,8 @@ import com.typesafe.sbt.packager.Keys._
 
 name := "docserv"
 
+organization := "se.altrusoft"
+
 version := "0.31"
 
 libraryDependencies ++= Seq(
@@ -57,3 +59,5 @@ packageDescription in Linux := "Docserv generates reports from Json data using x
 packageSummary in Linux := "Docserv is a report generator"
 
 maintainer in Debian := "Altrusoft AB <info@altrusoft.se>"
+
+publishTo := Some(Resolver.file("file",  new File( "target/repo" )) )
