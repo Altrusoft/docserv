@@ -1,8 +1,7 @@
 /*
- * Copyright (c) 2013 Altrusoft AB.
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Copyright (c) 2013 Altrusoft AB. This Source Code Form is subject to the terms of the Mozilla
+ * Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+ * one at http://mozilla.org/MPL/2.0/.
  */
 package se.altrusoft.docserv.controllers;
 
@@ -52,20 +51,17 @@ public class Application extends Controller {
 	@Autowired
 	private Map<String, TemplateModel> templates;
 
-	private static void generateDocumentFromTemplate(
-			TemplateModel templateModel, OutputStream out)
-			throws XDocReportException, IOException {
+	private static void generateDocumentFromTemplate(TemplateModel templateModel, OutputStream out)
+		throws XDocReportException, IOException {
 		InputStream in = null;
 		try {
 			in = templateModel.getTemplateFile().getInputStream();
 
 			IXDocReport report = null;
 			if (TemplateType.VELOCITY.equals(templateModel.getTemplateType())) {
-				report = XDocReportRegistry.getRegistry().loadReport(in,
-						TemplateEngineKind.Velocity);
+				report = XDocReportRegistry.getRegistry().loadReport(in, TemplateEngineKind.Velocity);
 			} else {
-				report = XDocReportRegistry.getRegistry().loadReport(in,
-						TemplateEngineKind.Freemarker);
+				report = XDocReportRegistry.getRegistry().loadReport(in, TemplateEngineKind.Freemarker);
 			}
 
 			IContext context = report.createContext();
@@ -74,10 +70,8 @@ public class Application extends Controller {
 			if (templateModel.getPostProcessor() != null) {
 				ByteArrayOutputStream tempOutputStream = new ByteArrayOutputStream();
 				report.process(context, tempOutputStream);
-				InputStream tempInputStream = new ByteArrayInputStream(
-						tempOutputStream.toByteArray());
-				ODSProcessor.transformODS(tempInputStream, out,
-						templateModel.getPostProcessor());
+				InputStream tempInputStream = new ByteArrayInputStream(tempOutputStream.toByteArray());
+				ODSProcessor.transformODS(tempInputStream, out, templateModel.getPostProcessor());
 			} else {
 				report.process(context, out);
 			}
@@ -107,23 +101,19 @@ public class Application extends Controller {
 			} else {
 				Object readValue = mapper.readValue(json, Object.class);
 				LinkedHashMap<String, Object> jsonValue = (LinkedHashMap<String, Object>) readValue;
-				TemplateModel dynamicTemplateModel = DynamicModel
-						.getTemplateModel(templateName, jsonValue);
+				TemplateModel dynamicTemplateModel = DynamicModel.getTemplateModel(templateName, jsonValue);
 				// TODO: applicationContext properties has to injected in
 				// the new dynamically generated model ...
 				// This is only partially done here for the template file -
 				// needs design?
-				dynamicTemplateModel.setTemplateFile(templateModel
-						.getTemplateFile());
+				dynamicTemplateModel.setTemplateFile(templateModel.getTemplateFile());
 				templateModel = dynamicTemplateModel;
 			}
 		} catch (JsonParseException e) {
 			Logger.warn("Unable to parse received Json data - bad request", e);
 			return badRequest("JsonParseException");
 		} catch (JsonMappingException e) {
-			Logger.warn(
-					"Received Json data does not map to template model - bad resquest",
-					e);
+			Logger.warn("Received Json data does not map to template model - bad resquest", e);
 			return badRequest("Received Json data does not map to template model");
 		} catch (IOException e) {
 			Logger.error("IOException while reading Json data", e);
@@ -141,16 +131,13 @@ public class Application extends Controller {
 			if (mimeType != null) {
 				generatedDocumentOutputStream = new ByteArrayOutputStream();
 
-				generateDocumentFromTemplate(templateModel,
-						generatedDocumentOutputStream);
+				generateDocumentFromTemplate(templateModel, generatedDocumentOutputStream);
 
 				if (mimeType.getConvertFilterName() != null) {
 					Logger.debug("Generating " + mimeType.getValue() + "...");
 
-					generatedDocumentOutputStream = convert(
-							generatedDocumentOutputStream,
-							mimeType.getConvertFilterName(),
-							mimeType.getFilterParameters());
+					generatedDocumentOutputStream = convert(generatedDocumentOutputStream,
+						mimeType.getConvertFilterName(), mimeType.getFilterParameters());
 				}
 			} else {
 				String warnMessage = "Unsupported mime-type: " + acceptHeader;
@@ -164,15 +151,11 @@ public class Application extends Controller {
 				byte[] content = generatedDocumentOutputStream.toByteArray();
 				byte[] bs64EncodedContent = new Base64().encode(content);
 				Logger.info("Returning base 64 encoded content OK");
-				response()
-						.setHeader(CONTENT_TRANSFER_ENCODING, ENCODING_BASE64);
-				return ok(new ByteArrayInputStream(bs64EncodedContent)).as(
-						mimeType.getValue());
+				response().setHeader(CONTENT_TRANSFER_ENCODING, ENCODING_BASE64);
+				return ok(new ByteArrayInputStream(bs64EncodedContent)).as(mimeType.getValue());
 			} else {
-				Logger.info("Returning OK");
-				return ok(
-						new ByteArrayInputStream(generatedDocumentOutputStream
-								.toByteArray())).as(mimeType.getValue());
+				Logger.info("Returning OK with content-type: " + mimeType.getValue());
+				return ok(new ByteArrayInputStream(generatedDocumentOutputStream.toByteArray())).as(mimeType.getValue());
 			}
 		} catch (XDocReportException e) {
 			String errorMessage = "Unable to generate document";
@@ -199,10 +182,8 @@ public class Application extends Controller {
 		}
 	}
 
-	private static ByteArrayOutputStream convert(
-			ByteArrayOutputStream odxStream, String targetFormat,
-			Map<String, Object> filterParameters) throws BootstrapException,
-			Exception, IOException {
+	private static ByteArrayOutputStream convert(ByteArrayOutputStream odxStream, String targetFormat,
+		Map<String, Object> filterParameters) throws BootstrapException, Exception, IOException {
 		// TODO: Can this be done once during app init?
 		XComponentContext xContext = Bootstrap.bootstrap();
 
@@ -213,11 +194,9 @@ public class Application extends Controller {
 		OOoInputStream generatedODFInputStream = null;
 		try {
 			convertedOutputStream = null;
-			generatedODFInputStream = new OOoInputStream(
-					odxStream.toByteArray());
+			generatedODFInputStream = new OOoInputStream(odxStream.toByteArray());
 			convertedOutputStream = new OOoOutputStream();
-			converter.convert(generatedODFInputStream, convertedOutputStream,
-					targetFormat, filterParameters);
+			converter.convert(generatedODFInputStream, convertedOutputStream, targetFormat, filterParameters);
 
 			generatedPDFOutputStream.write(convertedOutputStream.toByteArray());
 		} finally {
