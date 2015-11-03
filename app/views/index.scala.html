@@ -1,0 +1,12 @@
+@* index Template File *@
+@()(implicit messages: Messages)
+@import build.BuildInfo
+@import se.altrusoft.docserv.util.ViewUtils
+@base(messages) {
+	<h2>@messages("index.services")</h2>
+	
+	<ul>
+		<li><a href="/version">GET /version</a>, @messages("index.service.version")
+		<li><a href="/templates">GET /templates</a>, @messages("index.service.templates")
+	</ul>
+}

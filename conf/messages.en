@@ -1,0 +1,5 @@
+index.title = Welcome to DocServ
+index.services = Available services
+index.service.version = returns version number of DocServe
+index.service.templates = lists registered templates
+templates.registered = Registered templates

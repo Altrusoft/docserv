@@ -1,0 +1,18 @@
+@* index Template File *@
+@(templates: scala.collection.immutable.List[Tuple4[String, String, String, String]])(implicit messages: Messages)
+@import build.BuildInfo
+@import se.altrusoft.docserv.util.ViewUtils
+@base(messages) {
+	<h2>@messages("templates.registered")</h2>
+	
+	<table class="table">
+		@for(template <- templates) {
+			<tr>
+				<td>@template._1</td>
+				<td>@template._2</td>
+				<td>@template._3</td>
+				<td>@template._4</td>
+			</tr>
+		}
+	</table>
+}

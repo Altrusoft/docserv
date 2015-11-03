@@ -1,25 +1,34 @@
-import com.typesafe.sbt.SbtNativePackager._
-import com.typesafe.sbt.packager.Keys._
+// DocServ
 
 name := "docserv"
 
 organization := "se.altrusoft"
 
-version := "0.31"
+version := "0.32"
+
+enablePlugins(
+	JavaServerAppPackaging,
+	BuildInfoPlugin
+)
+
+resolvers += "Spring Snapshots" at "http://maven.springframework.org/snapshot"
 
 libraryDependencies ++= Seq(
+	javaCore,
+	javaWs,
+	"junit" % "junit" % "4.12" % "test->default",
+	"com.novocode" % "junit-interface" % "0.10" % "test->default",
 	"org.slf4j" % "slf4j-api" % "1.7.5",
-	"fr.opensagres.xdocreport" % "fr.opensagres.xdocreport.core" % "1.0.3",
-	"fr.opensagres.xdocreport" % "fr.opensagres.xdocreport.document" % "1.0.3",
-	"fr.opensagres.xdocreport" % "fr.opensagres.xdocreport.template" % "1.0.3",
-	"fr.opensagres.xdocreport" % "fr.opensagres.xdocreport.document.odt" % "1.0.3",
-	"fr.opensagres.xdocreport" % "fr.opensagres.xdocreport.document.ods" % "1.0.3",
-	"fr.opensagres.xdocreport" % "fr.opensagres.xdocreport.template.velocity" % "1.0.3",
-	"fr.opensagres.xdocreport" % "fr.opensagres.xdocreport.template.freemarker" % "1.0.3",
-	"fr.opensagres.xdocreport" % "fr.opensagres.xdocreport.converter" % "1.0.3",
-	"fr.opensagres.xdocreport" % "fr.opensagres.xdocreport.converter.odt.odfdom" % "1.0.3",
-	"fr.opensagres.xdocreport" % "fr.opensagres.xdocreport.itext.extension" % "1.0.3",
-	"org.springframework" % "spring-context" % "3.2.4.RELEASE",
+	"fr.opensagres.xdocreport" % "fr.opensagres.xdocreport.core" % "1.0.5",
+	"fr.opensagres.xdocreport" % "fr.opensagres.xdocreport.document" % "1.0.5",
+	"fr.opensagres.xdocreport" % "fr.opensagres.xdocreport.template" % "1.0.5",
+	"fr.opensagres.xdocreport" % "fr.opensagres.xdocreport.document.odt" % "1.0.5",
+	"fr.opensagres.xdocreport" % "fr.opensagres.xdocreport.document.ods" % "1.0.5",
+	"fr.opensagres.xdocreport" % "fr.opensagres.xdocreport.template.velocity" % "1.0.5",
+	"fr.opensagres.xdocreport" % "fr.opensagres.xdocreport.template.freemarker" % "1.0.5",
+	"fr.opensagres.xdocreport" % "fr.opensagres.xdocreport.converter" % "1.0.5",
+	"fr.opensagres.xdocreport" % "fr.opensagres.xdocreport.converter.odt.odfdom" % "1.0.5",
+	"fr.opensagres.xdocreport" % "fr.opensagres.xdocreport.itext.extension" % "1.0.5",
 	"commons-io" % "commons-io" % "2.4",
 	"commons-collections" % "commons-collections" % "3.2.1",
 	"commons-lang" % "commons-lang" % "2.4",
@@ -33,26 +42,36 @@ libraryDependencies ++= Seq(
 	"com.fasterxml.jackson.module" % "jackson-module-mrbean" % "2.1.2",
 	"cglib" % "cglib" % "2.2.2",
 	"commons-beanutils" % "commons-beanutils" % "1.8.3",
-	// used only during test for verification
+  	// used only during test for verification
 	"com.itextpdf" % "itextpdf"  % "5.4.0" % "test"
 )
 
-def javaVersion: String = {
-	val ver = System.getenv("DOCSERV_JAVA_VERSION");
-	if (ver == null) {
-		"1.7";
-	} else {
-		ver;
-	}
-}
+scalaVersion := "2.11.7"
+
+def javaVersion: String = "1.8";
 
 javacOptions ++= Seq("-source", javaVersion, "-target", javaVersion)
 
-play.Project.playJavaSettings
+javacOptions in compile += "-g"
 
-seq(sonar.settings :_*)
+lazy val root = (project in file(".")).enablePlugins(PlayJava)
 
-packageArchetype.java_server
+routesGenerator := InjectedRoutesGenerator
+
+EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Managed
+
+seq(
+	sonar.settings :_*
+)
+
+buildInfoKeys := Seq[BuildInfoKey](
+	name, 
+	version, 
+	BuildInfoKey.action("buildTime") {
+		System.currentTimeMillis
+	})
+
+buildInfoPackage := "build"
 
 packageDescription in Linux := "Docserv generates reports from Json data using xdocreport and libreoffice"
 
