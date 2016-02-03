@@ -40,6 +40,12 @@
 							value="public/templates/Invoice_no_class/template.odt" />
 					</bean>
 				</entry>
+				<entry key="menu">
+					<bean class="se.altrusoft.docserv.models.Menu">
+						<property name="templateType" value="VELOCITY" />
+						<property name="templateFile" value="public/templates/menu/template.odt" />
+					</bean>
+				</entry>
 			</map>
 		</property>
 	</bean>
