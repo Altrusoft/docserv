@@ -8,4 +8,4 @@
 TESTFILE="../test/json/test_menu.json"
 HOST="http://localhost:9001/document/menu"
 cd $(dirname $0)
-curl -w "HTTP Status: %{http_code}\n" -H "Content-Type: application/json" -H "Accept: application/vnd.oasis.opendocument.text" --data-binary @$TESTFILE $HOST > output_test_menue.odt
+curl -w "HTTP Status: %{http_code}\n" -H "Content-Type: application/json" -H "Accept: application/pdf" --data-binary @$TESTFILE $HOST > output_test_menue.pdf
