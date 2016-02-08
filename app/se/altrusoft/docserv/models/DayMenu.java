@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -40,6 +42,10 @@ public class DayMenu  {
 		return (entryDate != null) ? formatter.format(entryDate) : "-";
 	}
 	
+	public String getEntryDayPP() {
+		return (entryDate != null) ? StringUtils.capitalize(dayFormater.format(entryDate)) : "-";
+	}
+	
 	public Date entryDate;
 	
 	@JsonIgnore
@@ -52,5 +58,7 @@ public class DayMenu  {
 	public List<MenuEntry> otherEntries;
 	
 	private static DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+	
+	private static DateFormat dayFormater = new SimpleDateFormat("EEEE");
 
 }
