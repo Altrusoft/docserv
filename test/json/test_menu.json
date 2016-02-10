@@ -1,19 +1,21 @@
-{ "location": "Gourmet Corner",
-  "mealGroup": "VIP Launge",
-  "entries" : [ 
-      { 
-	  "entryDate" : 1346536800000,
-	  "meal" : "Lunch", 
-	  "entryText" : "Kottbullar och potatis"
-      }, 
-      { 
-	  "entryDate" : 1346536800000,
-	  "meal" : "Dinner", 
-	  "entryText" : "Isterband och potatis"
-      }, 
-      { 
-	  "entryDate" : 1346536800000,
-	  "meal" : "Lunch", 
-	  "entryText" : "Fisk och potatis"} 
-  ]
+{
+	"location": "Gourmet Corner",
+	"mealGroup": "VIP Launge",
+	"entries" : [ 
+	    { 
+	 		"entryDate" : 1346536800000,
+	 		"meal" : "Lunch", 
+	 		"entryText" : "Kottbullar och potatis"
+	    }, 
+	    { 
+	    	"entryDate" : 1346536800000,
+	    	"meal" : "Dinner", 
+	    	"entryText" : "Isterband och potatis"
+	    },
+	    {
+	    	"entryDate" : 1346536800000,
+	    	"meal" : "Lunch", 
+	    	"entryText" : "Fisk och potatis"
+	    }
+	]
 } 

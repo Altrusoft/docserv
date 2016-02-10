@@ -1,0 +1,28 @@
+{
+	"location": "Aleris Baldersro Plaza",
+	"activityGroup": "Musikgruppen",
+	"entries": 
+	[
+		{
+			"entryDate": 1454886000000,
+			"entryStartTime": "10:00",
+			"entryEndTime": "11:30",
+			"entryText": "Allsång",
+			"entryLocation": "Musikrummet"	
+		},
+		{
+			"entryDate": 1454886000000,
+			"entryStartTime": "17:00",
+			"entryEndTime": "18:00",
+			"entryText": "Beethoven-afton",
+			"entryLocation": ""	
+		},
+		{
+			"entryDate": 1454972400000,
+			"entryStartTime": "14:00",
+			"entryEndTime": "15:00",
+			"entryText": "Allsång",
+			"entryLocation": ""	
+		}	
+	]	
+}

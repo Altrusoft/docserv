@@ -1,0 +1,16 @@
+
+{
+    "location": "Hemmet",
+    "mealGroup": "Sarkofagerna",
+    "entries": [
+    {
+        "entryDate": 1454886000000,
+        "meal": "Lunch",
+        "entryText": "Kyckling och potatis"
+    },
+    {
+        "entryDate": 1454886000000,
+        "meal": "Dinner",
+        "entryText": "Kött och potatis"
+    }]
+}
