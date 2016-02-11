@@ -5,7 +5,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-TESTFILE="../test/json/aleris.json"
-HOST="http://localhost:9001/document/menu"
+TESTFILE="../test/json/aleris_schedule.json"
+HOST="http://localhost:9001/document/schedule"
 cd $(dirname $0)
-curl -w "HTTP Status: %{http_code}\n" -H "Content-Type: application/json" -H "Accept: application/pdf" --data-binary @$TESTFILE $HOST > output_test_menue.pdf
+curl -w "HTTP Status: %{http_code}\n" -H "Content-Type: application/json" -H "Accept: application/pdf" --data-binary @$TESTFILE $HOST > output_test_schedule.pdf

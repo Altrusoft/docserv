@@ -46,6 +46,12 @@
 						<property name="templateFile" value="public/templates/menu/template.odt" />
 					</bean>
 				</entry>
+				<entry key="schedule">
+					<bean class="se.altrusoft.docserv.models.ActivitySchedule">
+						<property name="templateType" value="VELOCITY" />
+						<property name="templateFile" value="public/templates/schedule/template.odt" />
+					</bean>
+				</entry>
 			</map>
 		</property>
 	</bean>

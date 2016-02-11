@@ -1,0 +1,36 @@
+
+{
+    "location": "Hemmet",
+    "mealGroup": "Sarkofagerna",
+    "entries": [
+    {
+        "entryDate": 1454886000000,
+        "meal": "Lunch",
+        "entryText": "Kyckling och potatis"
+    },
+    {
+        "entryDate": 1454886000000,
+        "meal": "Lunch",
+        "entryText": "Kött och potatis"
+    },
+    {
+        "entryDate": 1454886000000,
+        "meal": "Dinner",
+        "entryText": "Fisk och potatis"
+    },
+    {
+        "entryDate": 1454972400000,
+        "meal": "Lunch",
+        "entryText": "Spaghetti och köttfärssås"
+    },
+    {
+        "entryDate": 1454972400000,
+        "meal": "Dinner",
+        "entryText": "Ugnsstekt lax med ris och gröna bönor"
+    },
+    {
+        "entryDate": 1454972400000,
+        "meal": "Lunch",
+        "entryText": "Ärtsoppa och pannkaka"
+    }]
+}
