@@ -3,17 +3,17 @@
   "entries" : [ 
       { 
 	  "entryDate" : 1346536800000,
-	  "meal" : "Lunch", 
-	  "entryText" : "Kottbullar och potatis"
+	  "meal" : "Dinner", 
+	  "entryText" : "Köttbullar och potatis"
       }, 
       { 
 	  "entryDate" : 1346536800000,
-	  "meal" : "Dinner", 
+	  "meal" : "Lunch", 
 	  "entryText" : "Isterband och potatis"
       }, 
       { 
 	  "entryDate" : 1346536800000,
-	  "meal" : "Lunch", 
+	  "meal" : "Dinner", 
 	  "entryText" : "Fisk och potatis"} 
   ]
 } 
