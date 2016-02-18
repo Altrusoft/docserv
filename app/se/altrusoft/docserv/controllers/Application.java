@@ -18,19 +18,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import play.Logger;
-import play.mvc.BodyParser;
-import play.mvc.BodyParser.Json;
-import play.mvc.Controller;
-import play.mvc.Result;
-import se.altrusoft.docserv.controllers.ooconverter.OOoInputStream;
-import se.altrusoft.docserv.controllers.ooconverter.OOoOutputStream;
-import se.altrusoft.docserv.controllers.ooconverter.OOoStreamConverter;
-import se.altrusoft.docserv.models.DynamicModel;
-import se.altrusoft.docserv.models.TemplateModel;
-import se.altrusoft.docserv.models.TemplateType;
-import se.altrusoft.docserv.odsprocessor.ODSProcessor;
-
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,13 +31,28 @@ import fr.opensagres.xdocreport.document.IXDocReport;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
+import play.Logger;
+import play.mvc.BodyParser;
+import play.mvc.BodyParser.Json;
+import play.mvc.Controller;
+import play.mvc.Result;
+import se.altrusoft.docserv.controllers.ooconverter.OOoInputStream;
+import se.altrusoft.docserv.controllers.ooconverter.OOoOutputStream;
+import se.altrusoft.docserv.controllers.ooconverter.OOoStreamConverter;
+import se.altrusoft.docserv.models.DynamicModel;
+import se.altrusoft.docserv.models.TemplateModel;
+import se.altrusoft.docserv.models.TemplateModelFactory;
+import se.altrusoft.docserv.models.TemplateType;
+import se.altrusoft.docserv.odsprocessor.ODSProcessor;
 
 @org.springframework.stereotype.Controller
 public class Application extends Controller {
 	private static final String ENCODING_BASE64 = "base64";
 
+//	@Autowired
+//	private Map<String, TemplateModel> templates;
 	@Autowired
-	private Map<String, TemplateModel> templates;
+	private TemplateModelFactory templateModelFactory;
 
 	private static void generateDocumentFromTemplate(
 			TemplateModel templateModel, OutputStream out)
@@ -94,7 +96,8 @@ public class Application extends Controller {
 		String json = request().body().asJson().toString();
 		String acceptHeader = request().getHeader(ACCEPT);
 
-		TemplateModel templateModel = templates.get(templateName);
+		TemplateModel templateModel = templateModelFactory.getTemplateModel(templateName);
+		//templates.get(templateName).getClone();
 
 		try {
 			if (!templateModel.isDynamic()) {
@@ -228,11 +231,15 @@ public class Application extends Controller {
 		return generatedPDFOutputStream;
 	}
 
-	public Map<String, TemplateModel> getTemplates() {
-		return templates;
+	public TemplateModelFactory getTemplateModelFactory() {
+		return templateModelFactory;
 	}
 
-	public void setTemplates(Map<String, TemplateModel> templates) {
-		this.templates = templates;
+	public void setTemplateModelFactory(TemplateModelFactory templateModelFactory) {
+		this.templateModelFactory = templateModelFactory;
 	}
+
+
+	
+	
 }

@@ -34,8 +34,7 @@ public class Menu extends TemplateModel {
 	}
 
 	@Override
-	public void expandModel() {
-		
+	public void expandModel() {		
 		if (entries != null) {
 			Map<Date, DayMenu> dayMenusMap = new HashMap<>();
 			
@@ -61,26 +60,26 @@ public class Menu extends TemplateModel {
 
 
 
-	public String location;
+	public String location = "";
 	
-	public String mealGroup;
+	public String mealGroup = "";
 	
 
-	public List<MenuEntry> entries;
+	public List<MenuEntry> entries = new ArrayList<>();
 	
 	public String getFromDatePP() {
 		return (fromDate != null) ? formatter.format(fromDate) : "-";
 	}
 	
 	@JsonIgnore
-	public Date fromDate;
+	public Date fromDate = null;
 	
 	public String getToDatePP() {
 		return (toDate != null) ? formatter.format(toDate) : "-";
 	}
 	
 	@JsonIgnore
-	public Date toDate;
+	public Date toDate = null;
 	
 	/**
 	 * A sorted list with one entry for each day from fromDate to toDate of

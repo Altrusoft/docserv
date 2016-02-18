@@ -22,17 +22,17 @@ public class ActivitySchedule extends TemplateModel {
 
 	private static String[] FIELDS_TO_TRANSLATE = new String[] {};
 
-	public String location;
+	public String location = "";
 
-	public String activityGroup;
+	public String activityGroup = "";
 
-	public List<ScheduleEntry> entries;
-
-	@JsonIgnore
-	public Date fromDate;
+	public List<ScheduleEntry> entries = new ArrayList<>();
 
 	@JsonIgnore
-	public Date toDate;
+	public Date fromDate = null;
+
+	@JsonIgnore
+	public Date toDate = null;
 
 	/**
 	 * A sorted list with one entry for each day from fromDate to toDate of DayMenu objects where
@@ -57,6 +57,8 @@ public class ActivitySchedule extends TemplateModel {
 
 	@Override
 	public void expandModel() {
+		fromDate=null;
+		toDate=null;
 
 		if (entries != null) {
 			Map<Date, DaySchedule> daySchedulesMap = new HashMap<>();

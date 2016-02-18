@@ -16,7 +16,7 @@ import org.springframework.core.io.Resource;
 import play.Logger;
 import se.altrusoft.docserv.odsprocessor.DOMTransformer;
 
-public abstract class TemplateModel {
+public abstract class TemplateModel implements Cloneable {
 	private static final String DEFAULT_PARAMETER_PREFIX = "data";
 
 	private Resource templateFile;
@@ -120,6 +120,9 @@ public abstract class TemplateModel {
 	}
 
 	public TemplateType getTemplateType() {
+//		if (templateType==null) {
+//			return TemplateType.VELOCITY;
+//		}
 		return templateType;
 	}
 
@@ -133,5 +136,22 @@ public abstract class TemplateModel {
 
 	public void setProperties(Properties properties) {
 		this.properties = properties;
+	}
+	
+	public TemplateModel getClone() {
+		TemplateModel result=null;
+		try {
+			result = (TemplateModel) this.clone();
+		} catch (CloneNotSupportedException e) {
+			// Should never happen!
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		Object result =  super.clone();
+		return result;
 	}
 }

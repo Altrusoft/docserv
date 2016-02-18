@@ -10,8 +10,8 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans.xsd">
-
-	<bean id="application" class="se.altrusoft.docserv.controllers.Application">
+	
+	<bean id="templateModelFactory" class="se.altrusoft.docserv.models.TemplateModelFactory">
 		<property name="templates">
 			<map>
 				<entry key="SpreadsheetModel">
@@ -53,6 +53,12 @@
 					</bean>
 				</entry>
 			</map>
+		</property>
+	</bean>
+	
+	<bean id="application" class="se.altrusoft.docserv.controllers.Application">
+		<property name="templateModelFactory">
+			<ref bean="templateModelFactory"/>
 		</property>
 	</bean>
 </beans>
