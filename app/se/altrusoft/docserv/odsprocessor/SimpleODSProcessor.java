@@ -11,7 +11,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-final class SimpleODSProcessor implements DOMTransformer {
+public class SimpleODSProcessor implements DOMTransformer {
 	private static final String TABLE_CELL = "table:table-cell";
 	private static final String TABLE_FORMULA = "table:formula";
 	private static final String OFFICE_VALUE = "office:value";

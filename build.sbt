@@ -5,7 +5,7 @@ name := "docserv"
 
 organization := "se.altrusoft"
 
-version := "0.32"
+version := "0.34"
 
 libraryDependencies ++= Seq(
 	"org.slf4j" % "slf4j-api" % "1.7.5",
@@ -34,7 +34,8 @@ libraryDependencies ++= Seq(
 	"cglib" % "cglib" % "2.2.2",
 	"commons-beanutils" % "commons-beanutils" % "1.8.3",
 	// used only during test for verification
-	"com.itextpdf" % "itextpdf"  % "5.4.0" % "test"
+	"com.itextpdf" % "itextpdf"  % "5.4.0" % "test",
+	"net.sf.corn" % "corn-cps" % "1.1.7"
 )
 
 def javaVersion: String = {

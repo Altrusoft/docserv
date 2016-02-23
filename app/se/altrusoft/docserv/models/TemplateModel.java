@@ -6,20 +6,34 @@
  */
 package se.altrusoft.docserv.models;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.Resource;
 
+import fr.opensagres.xdocreport.core.XDocReportException;
+import fr.opensagres.xdocreport.document.IXDocReport;
+import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
+import fr.opensagres.xdocreport.template.IContext;
+import fr.opensagres.xdocreport.template.TemplateEngineKind;
 import play.Logger;
+import play.Play;
 import se.altrusoft.docserv.odsprocessor.DOMTransformer;
+import se.altrusoft.docserv.odsprocessor.ODSProcessor;
 
 public abstract class TemplateModel implements Cloneable {
 	private static final String DEFAULT_PARAMETER_PREFIX = "data";
 
 	private Resource templateFile;
+	private String templateFileName;
+
 	private DOMTransformer postProcessor;
 	private TemplateType templateType;
 	private Properties properties;
@@ -59,6 +73,41 @@ public abstract class TemplateModel implements Cloneable {
 			IllegalAccessException {
 		Field field = getDeclaredField(fieldName);
 		return (field.get(this) instanceof List<?>);
+	}
+	
+	public ByteArrayOutputStream generateDocument() throws XDocReportException, IOException {
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		InputStream in = null;
+		try {
+			//in = this.getTemplateFile().getInputStream();
+			in = Play.application().resourceAsStream(getTemplateFileName());
+
+			IXDocReport report = null;
+			if (TemplateType.VELOCITY.equals(this.getTemplateType())) {
+				report = XDocReportRegistry.getRegistry().loadReport(in,
+						TemplateEngineKind.Velocity);
+			} else {
+				report = XDocReportRegistry.getRegistry().loadReport(in,
+						TemplateEngineKind.Freemarker);
+			}
+
+			IContext context = report.createContext();
+			context.put(this.getInTemplateDesignation(), this);
+
+			if (this.getPostProcessor() != null) {
+				ByteArrayOutputStream tempOutputStream = new ByteArrayOutputStream();
+				report.process(context, tempOutputStream);
+				InputStream tempInputStream = new ByteArrayInputStream(
+						tempOutputStream.toByteArray());
+				ODSProcessor.transformODS(tempInputStream, out,
+						this.getPostProcessor());
+			} else {
+				report.process(context, out);
+			}
+		} finally {
+			IOUtils.closeQuietly(in);
+		}
+		return out;
 	}
 
 	public void translateProperties() {
@@ -102,6 +151,15 @@ public abstract class TemplateModel implements Cloneable {
 			throws NoSuchFieldException {
 		return this.getClass().getDeclaredField(fieldName);
 	}
+	
+	public String getTemplateFileName() {
+		return templateFileName;
+	}
+
+	public void setTemplateFileName(String templateFileName) {
+		this.templateFileName = templateFileName;
+	}
+
 
 	public Resource getTemplateFile() {
 		return templateFile;

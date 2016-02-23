@@ -9,14 +9,11 @@ package se.altrusoft.docserv.controllers;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -27,10 +24,6 @@ import com.sun.star.uno.Exception;
 import com.sun.star.uno.XComponentContext;
 
 import fr.opensagres.xdocreport.core.XDocReportException;
-import fr.opensagres.xdocreport.document.IXDocReport;
-import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
-import fr.opensagres.xdocreport.template.IContext;
-import fr.opensagres.xdocreport.template.TemplateEngineKind;
 import play.Logger;
 import play.mvc.BodyParser;
 import play.mvc.BodyParser.Json;
@@ -42,55 +35,17 @@ import se.altrusoft.docserv.controllers.ooconverter.OOoStreamConverter;
 import se.altrusoft.docserv.models.DynamicModel;
 import se.altrusoft.docserv.models.TemplateModel;
 import se.altrusoft.docserv.models.TemplateModelFactory;
-import se.altrusoft.docserv.models.TemplateType;
-import se.altrusoft.docserv.odsprocessor.ODSProcessor;
 
-@org.springframework.stereotype.Controller
+
 public class Application extends Controller {
 	private static final String ENCODING_BASE64 = "base64";
 
-//	@Autowired
-//	private Map<String, TemplateModel> templates;
-	@Autowired
-	private TemplateModelFactory templateModelFactory;
+	public static final  TemplateModelFactory templateModelFactory = new TemplateModelFactory();
 
-	private static void generateDocumentFromTemplate(
-			TemplateModel templateModel, OutputStream out)
-			throws XDocReportException, IOException {
-		InputStream in = null;
-		try {
-			in = templateModel.getTemplateFile().getInputStream();
-
-			IXDocReport report = null;
-			if (TemplateType.VELOCITY.equals(templateModel.getTemplateType())) {
-				report = XDocReportRegistry.getRegistry().loadReport(in,
-						TemplateEngineKind.Velocity);
-			} else {
-				report = XDocReportRegistry.getRegistry().loadReport(in,
-						TemplateEngineKind.Freemarker);
-			}
-
-			IContext context = report.createContext();
-			context.put(templateModel.getInTemplateDesignation(), templateModel);
-
-			if (templateModel.getPostProcessor() != null) {
-				ByteArrayOutputStream tempOutputStream = new ByteArrayOutputStream();
-				report.process(context, tempOutputStream);
-				InputStream tempInputStream = new ByteArrayInputStream(
-						tempOutputStream.toByteArray());
-				ODSProcessor.transformODS(tempInputStream, out,
-						templateModel.getPostProcessor());
-			} else {
-				report.process(context, out);
-			}
-		} finally {
-			IOUtils.closeQuietly(in);
-		}
-	}
 
 	@SuppressWarnings("unchecked")
 	@BodyParser.Of(Json.class)
-	public Result getDocument(String templateName, String encoding) {
+	public static Result getDocument(String templateName, String encoding) {
 		// TODO: Use one static ObjectMapper of re-creating?
 		ObjectMapper mapper = new ObjectMapper();
 		String json = request().body().asJson().toString();
@@ -142,10 +97,7 @@ public class Application extends Controller {
 			MimeType mimeType = MimeType.getMimeType(acceptHeader);
 
 			if (mimeType != null) {
-				generatedDocumentOutputStream = new ByteArrayOutputStream();
-
-				generateDocumentFromTemplate(templateModel,
-						generatedDocumentOutputStream);
+				generatedDocumentOutputStream=templateModel.generateDocument();
 
 				if (mimeType.getConvertFilterName() != null) {
 					Logger.debug("Generating " + mimeType.getValue() + "...");
@@ -230,16 +182,5 @@ public class Application extends Controller {
 
 		return generatedPDFOutputStream;
 	}
-
-	public TemplateModelFactory getTemplateModelFactory() {
-		return templateModelFactory;
-	}
-
-	public void setTemplateModelFactory(TemplateModelFactory templateModelFactory) {
-		this.templateModelFactory = templateModelFactory;
-	}
-
-
-	
 	
 }
