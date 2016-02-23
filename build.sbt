@@ -5,7 +5,7 @@ name := "docserv"
 
 organization := "se.altrusoft"
 
-version := "0.31"
+version := "0.32"
 
 libraryDependencies ++= Seq(
 	"org.slf4j" % "slf4j-api" % "1.7.5",
