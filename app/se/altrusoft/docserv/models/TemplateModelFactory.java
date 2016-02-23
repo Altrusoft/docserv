@@ -75,7 +75,7 @@ public class TemplateModelFactory {
 			if(prop != null && prop.isPresent()) {
 				try {
 					m.setTemplateType(TemplateType.valueOf(prop.get()));
-					Logger.info("Using template type " + prop.get() + " for template  : " + name);
+					Logger.debug("Using template type " + prop.get() + " for template  : " + name);
 				} catch (Throwable e) {
 					Logger.error("Invalid template type " + prop.get() + " specified for template  : " + name);
 				}		
@@ -87,7 +87,7 @@ public class TemplateModelFactory {
 			prop = getTemplateProperty(name,"templateFile");
 			if(prop != null && prop.isPresent()) {
 				m.setTemplateFileName(prop.get());
-				Logger.info("Using template file " + prop.get() + " for template  : " + name);
+				Logger.debug("Using template file " + prop.get() + " for template  : " + name);
 			}
 			
 			/* Inject Post processor */			
@@ -97,10 +97,11 @@ public class TemplateModelFactory {
 				if (prop.get().equalsIgnoreCase("se.altrusoft.docserv.odsprocessor.SimpleODSProcessor")) {
 					DOMTransformer transformer = new SimpleODSProcessor();
 					m.setPostProcessor(transformer);
+					Logger.debug("Using post processor " + prop.get() + " for template  : " + name);
 				} else if (prop.get().equalsIgnoreCase("se.altrusoft.docserv.odsprocessor.MarkupODSProcessor")) {
 					DOMTransformer transformer = new MarkupODSProcessor();
 					m.setPostProcessor(transformer);
-					Logger.info("Using post processor " + prop.get() + " for template  : " + name);
+					Logger.debug("Using post processor " + prop.get() + " for template  : " + name);
 				} else {
 					Logger.error("Invalid postProcessor " + prop.get() + " specified for template  : " + name);
 				}
