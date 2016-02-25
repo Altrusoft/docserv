@@ -1,11 +1,15 @@
-import com.typesafe.sbt.SbtNativePackager._
-import com.typesafe.sbt.packager.Keys._
+//import com.typesafe.sbt.SbtNativePackager._
+//import com.typesafe.sbt.packager.Keys._
 
 name := "docserv"
 
 organization := "se.altrusoft"
 
-version := "0.34"
+version := "0.35"
+
+lazy val root = (project in file(".")).enablePlugins(PlayJava)
+
+scalaVersion := "2.11.6"
 
 libraryDependencies ++= Seq(
 	"org.slf4j" % "slf4j-api" % "1.7.5",
@@ -19,7 +23,7 @@ libraryDependencies ++= Seq(
 	"fr.opensagres.xdocreport" % "fr.opensagres.xdocreport.converter" % "1.0.5",
 	"fr.opensagres.xdocreport" % "fr.opensagres.xdocreport.converter.odt.odfdom" % "1.0.5",
 	"fr.opensagres.xdocreport" % "fr.opensagres.xdocreport.itext.extension" % "1.0.5",
-	"org.springframework" % "spring-context" % "3.2.4.RELEASE",
+	//"org.springframework" % "spring-context" % "3.2.4.RELEASE",
 	"commons-io" % "commons-io" % "2.4",
 	"commons-collections" % "commons-collections" % "3.2.1",
 	"commons-lang" % "commons-lang" % "2.4",
@@ -33,15 +37,17 @@ libraryDependencies ++= Seq(
 	"com.fasterxml.jackson.module" % "jackson-module-mrbean" % "2.1.2",
 	"cglib" % "cglib" % "2.2.2",
 	"commons-beanutils" % "commons-beanutils" % "1.8.3",
+	// json-lib seems to be missing
+	//"net.sf.json-lib" % "json-lib" % "2.4",
+	"net.sf.corn" % "corn-cps" % "1.1.7",
 	// used only during test for verification
-	"com.itextpdf" % "itextpdf"  % "5.4.0" % "test",
-	"net.sf.corn" % "corn-cps" % "1.1.7"
+	"com.itextpdf" % "itextpdf"  % "5.4.0" % "test"
 )
 
 def javaVersion: String = {
 	val ver = System.getenv("DOCSERV_JAVA_VERSION");
 	if (ver == null) {
-		"1.7";
+		"1.8";
 	} else {
 		ver;
 	}
@@ -49,11 +55,11 @@ def javaVersion: String = {
 
 javacOptions ++= Seq("-source", javaVersion, "-target", javaVersion)
 
-play.Project.playJavaSettings
+//play.Project.playJavaSettings
 
 seq(sonar.settings :_*)
 
-packageArchetype.java_server
+//packageArchetype.java_server
 
 packageDescription in Linux := "Docserv generates reports from Json data using xdocreport and libreoffice"
 
@@ -62,3 +68,6 @@ packageSummary in Linux := "Docserv is a report generator"
 maintainer in Debian := "Altrusoft AB <info@altrusoft.se>"
 
 publishTo := Some(Resolver.file("file",  new File( "target/repo" )) )
+
+// Compile the project before generating Eclipse files, so that generated .scala or .class files for views and routes are present
+EclipseKeys.preTasks := Seq(compile in Compile)

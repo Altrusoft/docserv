@@ -6,6 +6,7 @@
  */
 package se.altrusoft.docserv.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -14,6 +15,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class SpreadsheetModel extends TemplateModel {
 
 	private static String[] FIELDS_TO_TRANSLATE = new String[] {};
+
+	private String year;
+
+	private String info;
+
+	private List<SpreadRow> rows = new ArrayList<>();
+
+	private SpreadRow total;
 
 	@Override
 	public String getInTemplateDesignation() {
@@ -30,12 +39,36 @@ public class SpreadsheetModel extends TemplateModel {
 
 	}
 
-	public String year;
+	public String getYear() {
+		return year;
+	}
 
-	public String info;
+	public void setYear(String year) {
+		this.year = year;
+	}
 
-	public List<SpreadRow> rows;
+	public String getInfo() {
+		return info;
+	}
 
-	public SpreadRow total;
+	public void setInfo(String info) {
+		this.info = info;
+	}
+
+	public List<SpreadRow> getRows() {
+		return rows;
+	}
+
+	public void setRows(List<SpreadRow> rows) {
+		this.rows = rows;
+	}
+
+	public SpreadRow getTotal() {
+		return total;
+	}
+
+	public void setTotal(SpreadRow total) {
+		this.total = total;
+	}
 
 }

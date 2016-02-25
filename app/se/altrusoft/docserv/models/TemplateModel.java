@@ -28,7 +28,8 @@ import play.Play;
 import se.altrusoft.docserv.odsprocessor.DOMTransformer;
 import se.altrusoft.docserv.odsprocessor.ODSProcessor;
 
-public abstract class TemplateModel implements Cloneable {
+public abstract class TemplateModel {
+
 	private static final String DEFAULT_PARAMETER_PREFIX = "data";
 
 	private Resource templateFile;
@@ -50,45 +51,38 @@ public abstract class TemplateModel implements Cloneable {
 		// normal case do nothing;
 	}
 
-	public void setField(String fieldName, Object value)
-			throws NoSuchFieldException, IllegalAccessException {
+	public void setField(String fieldName, Object value) throws NoSuchFieldException, IllegalAccessException {
 		Field field = getDeclaredField(fieldName);
 		field.set(this, value);
 	}
 
-	public String getField(String fieldName) throws NoSuchFieldException,
-			IllegalAccessException {
+	public String getField(String fieldName) throws NoSuchFieldException, IllegalAccessException {
 		Field field = getDeclaredField(fieldName);
 		return (String) field.get(this);
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<String> getListField(String fieldName)
-			throws NoSuchFieldException, IllegalAccessException {
+	public List<String> getListField(String fieldName) throws NoSuchFieldException, IllegalAccessException {
 		Field field = getDeclaredField(fieldName);
 		return (List<String>) field.get(this);
 	}
 
-	public boolean fieldIsArray(String fieldName) throws NoSuchFieldException,
-			IllegalAccessException {
+	public boolean fieldIsArray(String fieldName) throws NoSuchFieldException, IllegalAccessException {
 		Field field = getDeclaredField(fieldName);
 		return (field.get(this) instanceof List<?>);
 	}
-	
+
 	public ByteArrayOutputStream generateDocument() throws XDocReportException, IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		InputStream in = null;
 		try {
-			//in = this.getTemplateFile().getInputStream();
 			in = Play.application().resourceAsStream(getTemplateFileName());
 
 			IXDocReport report = null;
 			if (TemplateType.VELOCITY.equals(this.getTemplateType())) {
-				report = XDocReportRegistry.getRegistry().loadReport(in,
-						TemplateEngineKind.Velocity);
+				report = XDocReportRegistry.getRegistry().loadReport(in, TemplateEngineKind.Velocity);
 			} else {
-				report = XDocReportRegistry.getRegistry().loadReport(in,
-						TemplateEngineKind.Freemarker);
+				report = XDocReportRegistry.getRegistry().loadReport(in, TemplateEngineKind.Freemarker);
 			}
 
 			IContext context = report.createContext();
@@ -97,10 +91,8 @@ public abstract class TemplateModel implements Cloneable {
 			if (this.getPostProcessor() != null) {
 				ByteArrayOutputStream tempOutputStream = new ByteArrayOutputStream();
 				report.process(context, tempOutputStream);
-				InputStream tempInputStream = new ByteArrayInputStream(
-						tempOutputStream.toByteArray());
-				ODSProcessor.transformODS(tempInputStream, out,
-						this.getPostProcessor());
+				InputStream tempInputStream = new ByteArrayInputStream(tempOutputStream.toByteArray());
+				ODSProcessor.transformODS(tempInputStream, out, this.getPostProcessor());
 			} else {
 				report.process(context, out);
 			}
@@ -111,6 +103,7 @@ public abstract class TemplateModel implements Cloneable {
 	}
 
 	public void translateProperties() {
+		// TODO: Simplify this by using BeanUtils
 		for (String fieldName : this.fieldsToTranslate()) {
 			try {
 				if (fieldIsArray(fieldName)) {
@@ -138,20 +131,17 @@ public abstract class TemplateModel implements Cloneable {
 					}
 				}
 			} catch (NoSuchFieldException e) {
-				Logger.error("Failed to access field: " + fieldName
-						+ " of template model. (No such field)", e);
+				Logger.error("Failed to access field: " + fieldName + " of template model. (No such field)", e);
 			} catch (IllegalAccessException e) {
-				Logger.error("Failed to access field: " + fieldName
-						+ " of template model. (Illegal access)", e);
+				Logger.error("Failed to access field: " + fieldName + " of template model. (Illegal access)", e);
 			}
 		}
 	}
 
-	private Field getDeclaredField(String fieldName)
-			throws NoSuchFieldException {
+	private Field getDeclaredField(String fieldName) throws NoSuchFieldException {
 		return this.getClass().getDeclaredField(fieldName);
 	}
-	
+
 	public String getTemplateFileName() {
 		return templateFileName;
 	}
@@ -159,7 +149,6 @@ public abstract class TemplateModel implements Cloneable {
 	public void setTemplateFileName(String templateFileName) {
 		this.templateFileName = templateFileName;
 	}
-
 
 	public Resource getTemplateFile() {
 		return templateFile;
@@ -178,9 +167,6 @@ public abstract class TemplateModel implements Cloneable {
 	}
 
 	public TemplateType getTemplateType() {
-//		if (templateType==null) {
-//			return TemplateType.VELOCITY;
-//		}
 		return templateType;
 	}
 
@@ -194,22 +180,5 @@ public abstract class TemplateModel implements Cloneable {
 
 	public void setProperties(Properties properties) {
 		this.properties = properties;
-	}
-	
-	public TemplateModel getClone() {
-		TemplateModel result=null;
-		try {
-			result = (TemplateModel) this.clone();
-		} catch (CloneNotSupportedException e) {
-			// Should never happen!
-			e.printStackTrace();
-		}
-		return result;
-	}
-	
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		Object result =  super.clone();
-		return result;
 	}
 }

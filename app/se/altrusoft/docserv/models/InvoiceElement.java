@@ -11,12 +11,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class InvoiceElement {
 
-	public String specification;
-	public Float numberOfUnits;
-	public String unitSort;
-	public Float unitPrice;
-	public String currency;
-	public String perUnitSort;
+	private String specification;
+	private Float numberOfUnits;
+	private String unitSort;
+	private Float unitPrice;
+	private String currency;
+	private String perUnitSort;
 
 	public String getPricePP() {
 		return currency + " " + getPrice();
@@ -25,4 +25,53 @@ public class InvoiceElement {
 	public Float getPrice() {
 		return numberOfUnits * unitPrice;
 	}
+
+	public String getSpecification() {
+		return specification;
+	}
+
+	public void setSpecification(String specification) {
+		this.specification = specification;
+	}
+
+	public Float getNumberOfUnits() {
+		return numberOfUnits;
+	}
+
+	public void setNumberOfUnits(Float numberOfUnits) {
+		this.numberOfUnits = numberOfUnits;
+	}
+
+	public String getUnitSort() {
+		return unitSort;
+	}
+
+	public void setUnitSort(String unitSort) {
+		this.unitSort = unitSort;
+	}
+
+	public Float getUnitPrice() {
+		return unitPrice;
+	}
+
+	public void setUnitPrice(Float unitPrice) {
+		this.unitPrice = unitPrice;
+	}
+
+	public String getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(String currency) {
+		this.currency = currency;
+	}
+
+	public String getPerUnitSort() {
+		return perUnitSort;
+	}
+
+	public void setPerUnitSort(String perUnitSort) {
+		this.perUnitSort = perUnitSort;
+	}
+
 }

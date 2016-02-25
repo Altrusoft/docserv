@@ -38,7 +38,7 @@ import play.libs.WS;
 import play.libs.WS.Response;
 import play.libs.WS.WSRequestHolder;
 import play.test.TestBrowser;
-import se.altrusoft.docserv.controllers.MimeType;
+import se.altrusoft.docserv.converter.MimeType;
 
 /**
  * Test class for verifying the whole application.

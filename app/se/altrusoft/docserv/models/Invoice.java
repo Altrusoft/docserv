@@ -17,7 +17,28 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Invoice extends TemplateModel {
 
+	private static DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 	private static String[] FIELDS_TO_TRANSLATE = new String[] {};
+
+	private Date invoiceDate;
+	private Integer invoiceSeries;
+	private Integer invoiceNumber;
+	private Integer customerNumber;
+	private String assignement;
+	private String ourReference;
+	private String customerReference;
+	public String description;
+	public List<String> consultants;
+	private Date startDate;
+	private Date endDate;
+	@JsonIgnore
+	private String currency;
+	@JsonIgnore
+	private Float VAT;
+	@JsonIgnore
+	private Float priceExcludingVAT;
+	@JsonIgnore
+	private Float priceIncludingVAT;
 
 	@Override
 	public String getInTemplateDesignation() {
@@ -40,7 +61,7 @@ public class Invoice extends TemplateModel {
 		if (invoiceElements != null) {
 			for (InvoiceElement invoiceElement : invoiceElements) {
 				// TODO: Handle many currencies -- HH
-				currency = invoiceElement.currency;
+				currency = invoiceElement.getCurrency();
 				priceExcludingVAT += invoiceElement.getPrice();
 			}
 		}
@@ -51,34 +72,17 @@ public class Invoice extends TemplateModel {
 
 	}
 
-	private static DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-
 	public String getInvoiceDatePP() {
-		return (invoiceDate != null) ? formatter.format(invoiceDate) : "-";
+		return (invoiceDate != null) ? DATE_FORMAT.format(invoiceDate) : "-";
 	}
-
-	public Date invoiceDate;
-	public Integer invoiceSeries;
-	public Integer invoiceNumber;
-	public Integer customerNumber;
-	public String assignement;
-	public String ourReference;
-	public String customerReference;
-
-	public String description;
-	public List<String> consultants;
 
 	public String getStartDatePP() {
-		return (startDate != null) ? formatter.format(startDate) : "-";
+		return (startDate != null) ? DATE_FORMAT.format(startDate) : "-";
 	}
-
-	public Date startDate;
 
 	public String getEndDatePP() {
-		return (endDate != null) ? formatter.format(endDate) : "-";
+		return (endDate != null) ? DATE_FORMAT.format(endDate) : "-";
 	}
-
-	public Date endDate;
 
 	public List<InvoiceElement> invoiceElements;
 
@@ -94,13 +98,132 @@ public class Invoice extends TemplateModel {
 		return currency + " " + priceIncludingVAT;
 	}
 
-	@JsonIgnore
-	public String currency;
-	@JsonIgnore
-	public Float VAT;
-	@JsonIgnore
-	public Float priceExcludingVAT;
-	@JsonIgnore
-	public Float priceIncludingVAT;
+	public Date getInvoiceDate() {
+		return invoiceDate;
+	}
+
+	public void setInvoiceDate(Date invoiceDate) {
+		this.invoiceDate = invoiceDate;
+	}
+
+	public Integer getInvoiceSeries() {
+		return invoiceSeries;
+	}
+
+	public void setInvoiceSeries(Integer invoiceSeries) {
+		this.invoiceSeries = invoiceSeries;
+	}
+
+	public Integer getInvoiceNumber() {
+		return invoiceNumber;
+	}
+
+	public void setInvoiceNumber(Integer invoiceNumber) {
+		this.invoiceNumber = invoiceNumber;
+	}
+
+	public Integer getCustomerNumber() {
+		return customerNumber;
+	}
+
+	public void setCustomerNumber(Integer customerNumber) {
+		this.customerNumber = customerNumber;
+	}
+
+	public String getAssignement() {
+		return assignement;
+	}
+
+	public void setAssignement(String assignement) {
+		this.assignement = assignement;
+	}
+
+	public String getOurReference() {
+		return ourReference;
+	}
+
+	public void setOurReference(String ourReference) {
+		this.ourReference = ourReference;
+	}
+
+	public String getCustomerReference() {
+		return customerReference;
+	}
+
+	public void setCustomerReference(String customerReference) {
+		this.customerReference = customerReference;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public List<String> getConsultants() {
+		return consultants;
+	}
+
+	public void setConsultants(List<String> consultants) {
+		this.consultants = consultants;
+	}
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public List<InvoiceElement> getInvoiceElements() {
+		return invoiceElements;
+	}
+
+	public void setInvoiceElements(List<InvoiceElement> invoiceElements) {
+		this.invoiceElements = invoiceElements;
+	}
+
+	public String getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(String currency) {
+		this.currency = currency;
+	}
+
+	public Float getVAT() {
+		return VAT;
+	}
+
+	public void setVAT(Float vAT) {
+		VAT = vAT;
+	}
+
+	public Float getPriceExcludingVAT() {
+		return priceExcludingVAT;
+	}
+
+	public void setPriceExcludingVAT(Float priceExcludingVAT) {
+		this.priceExcludingVAT = priceExcludingVAT;
+	}
+
+	public Float getPriceIncludingVAT() {
+		return priceIncludingVAT;
+	}
+
+	public void setPriceIncludingVAT(Float priceIncludingVAT) {
+		this.priceIncludingVAT = priceIncludingVAT;
+	}
 
 }
