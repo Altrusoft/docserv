@@ -5,7 +5,7 @@ name := "docserv"
 
 organization := "se.altrusoft"
 
-version := "0.35"
+version := "0.36.1"
 
 lazy val root = (project in file(".")).enablePlugins(PlayJava)
 
