@@ -9,10 +9,12 @@ package controllers;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Optional;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.io.IOUtils;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -47,7 +49,8 @@ public class Application extends Controller {
 	
 	public static Result index() {
 		String version = Configuration.root().getString("app.version");
-		return ok(views.html.index.render(version));
+		Collection<PropertiesConfiguration> templateConfigs = templateModelFactory.getTemplateConfigs();
+		return ok(views.html.index.render(version, templateConfigs));
 	}
 
 	@BodyParser.Of(Json.class)

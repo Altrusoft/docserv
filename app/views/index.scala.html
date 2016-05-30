@@ -1,4 +1,4 @@
-@(version: String)
+@(version: String, templateConfigs: java.util.Collection[org.apache.commons.configuration.PropertiesConfiguration] )
 <!DOCTYPE html>
 <html>
     <head>
@@ -7,6 +7,12 @@
     </head>
     <body>
 		<h1>Welcome to Altrusoft Docserv</h1>
-		<p>Version: @version</p>   
+		<p>Version: @version</p> 
+		<h2>Loaded templates</h2>
+		<ul>
+		@for(templateConfig <- templateConfigs) {
+			<li>@templateConfig.getString("name") (@templateConfig.getString("type"))</li>
+		}
+		</ul>   
     </body>
 </html>

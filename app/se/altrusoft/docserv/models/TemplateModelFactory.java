@@ -9,6 +9,7 @@ package se.altrusoft.docserv.models;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,10 @@ import se.altrusoft.docserv.odsprocessor.SimpleODSProcessor;
 public class TemplateModelFactory {
 
 	private Map<String, PropertiesConfiguration> templateConfigs;
+	
+	public Collection<PropertiesConfiguration> getTemplateConfigs() {
+		return templateConfigs.values();
+	}
 
 	public TemplateModelFactory() {
 		templateConfigs = new HashMap<>();
