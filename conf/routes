@@ -7,7 +7,8 @@
 # ~~~~
 
 # Home page
-POST   /document/:templateId   se.altrusoft.docserv.controllers.Application.getDocument(templateId:String,encoding:String ?= null)
+GET	   / 					   controllers.Application.index()
+POST   /document/:templateId   controllers.Application.getDocument(templateId:String,encoding:String ?= null)
 
 # Map static resources from the /public folder to the /assets URL path
 GET    /assets/*file           controllers.Assets.at(path="/public", file)
