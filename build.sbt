@@ -11,10 +11,6 @@ version := conf.getString("app.version")
 
 organization := "se.altrusoft"
 
-//name := "docserv"
-
-//version := "0.36.1"
-
 lazy val root = (project in file(".")).enablePlugins(PlayJava)
 
 scalaVersion := "2.11.6"
