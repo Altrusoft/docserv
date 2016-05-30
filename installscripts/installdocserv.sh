@@ -5,7 +5,7 @@ pushd .. > /dev/null
 if [ -e build.sbt ]
 then
     # in module dev env...
-    version=$(cat build.sbt | grep 'docservVerison' | cut -d '=' -f 2 | xargs)   
+    version=$(cat build.sbt | grep 'val' | grep 'docservVerison' | cut -d '=' -f 2 | xargs)   
     #version=$(grep -oP "\"se.altrusoft\"\s+%%\s+\"docserv\"\s+%\s+\"\K\d+.\d+" build.sbt)
     download=true
 else
