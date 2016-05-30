@@ -18,7 +18,7 @@ fi
 
 docserv_version=$(cat ${root_dir}/docserv-latest/conf/application.conf | grep 'app.version' | cut -d '=' -f 2 | xargs)
 
-echo ">>>Attempting top deploy modules for docserv version $docserv_version"
+echo ">>>Attempting to deploy modules for docserv version $docserv_version"
 
 if [ -n "$(ls -A ${root_dir}/docserv-modules | grep -e '\.jar$')" ]
 then
