@@ -2,15 +2,50 @@
 cd $(dirname $0)
 pushd .. > /dev/null
 
-if [ -e build.sbt ]
+version=$1
+if [ ! -z "${version}" ]
 then
-    # in module dev env...
-    version=$(cat build.sbt | grep 'val' | grep 'docservVerison' | cut -d '=' -f 2 | xargs)   
-    #version=$(grep -oP "\"se.altrusoft\"\s+%%\s+\"docserv\"\s+%\s+\"\K\d+.\d+" build.sbt)
-    download=true
+    echo ">>>Will try to download docserv version: ${version} (verison provided on command line)"
+    if wget --spider http://maven.altrusoft.se/dists/docserv-${version}.zip 2>/dev/null
+    then
+	download=true
+    else
+	echo ">>>Unable to downloading docserv version: ${version} - it is not found in the repo - exiting" 1>&2
+	exit 1
+    fi
 else
-    # in prod
-    download=false
+    if [ -e build.sbt ]
+    then
+	echo ">>>Found build.sbt - assuming development environment"
+	# in module dev env...
+	version=$(cat build.sbt | grep 'val' | grep 'docservVerison' | cut -d '=' -f 2 | xargs)   
+	#version=$(grep -oP "\"se.altrusoft\"\s+%%\s+\"docserv\"\s+%\s+\"\K\d+.\d+" build.sbt)
+	echo ">>>Will try to download docserv version: ${version} (Version found in build.sbt)"
+	download=true
+	if wget --spider http://maven.altrusoft.se/dists/docserv-${version}.zip 2>/dev/null
+	then
+	    download=true
+	else
+	    echo ">>>Unable to downloading docserv version: ${version} - it is not found in the repo - exiting" 1>&2
+	    exit 1
+	fi
+    else
+	echo ">>>Assuming docserv is ready to be installed in docserv-dist/universal"
+	download=false
+	if [ ! -d docserv-dist/universal ]
+	then
+	    echo ">>>No directory docserv-dist/universal found, thus no docserv to install - exiting" 1>&2
+	    exit 2
+	fi
+	cd docserv-dist/universal
+	if ls docserv*.zip 1> /dev/null 2>&1
+	then
+	    echo ">>>Found docserv that may be installed (docserv*.zip) in docserv-dist/universal"
+	else
+	    echo ">>>No docserv found that may be installed in docserv-dist/universal - exiting" 1>&2
+	    exit 3
+	fi  
+    fi
 fi
 
 if [ -d $(pwd)/server ]
@@ -23,20 +58,20 @@ fi
 cd ${root_dir}
 
 
-if $download
+if ${download}
 then
     mkdir -p docserv-dist/universal
     echo ">>>downloading docserv version: ${version}"
     cd docserv-dist/universal
-    wget http://maven.altrusoft.se/dists/docserv-${version}.zip
-else
-    if [ ! -d server/docserv-dist/universa ]
+    if wget http://maven.altrusoft.se/dists/docserv-${version}.zip
     then
-	echo ">>>no docserv found that may be installed" 1>&2
-	exit 9
+	echo ">>>Downloaded docserv version: ${version}"
+    else
+	echo ">>>Unable to downloaded docserv version: ${version} - exiting" 1>&2
+	exit 4
     fi
-    cd docserv-dist/universal
 fi
+
 
 unzip docserv*.zip
 
