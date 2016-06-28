@@ -37,18 +37,26 @@ cp -f docserv.orig docserv
 
 if [ -n "$(ls -A ${root_dir}/docserv-modules | grep -e '\.jar$')" ]
 then
-    modules=$(cd ${root_dir}/docserv-modules; ls -1 *.jar | grep -e "\-${docserv_version//./\\.}\-" )
+    modules=$(cd ${root_dir}/docserv-modules; ls -1 *.jar | grep -e "\-${docserv_version//./\\.}\-" | sort -r)
     if [ -z "${modules}" ]
     then
 	echo ">>>no modules with version $docserv_version to deploy"
 	install_modules=false
     else
 	modulePath="" 
-	for module in $modules 
+	last_module_name=""
+	for module in ${modules} 
 	do
-	    echo ">>>deploying module: ${module}"
-	    modulePath=${modulePath}":\$lib_dir/"${module}
-	    cp -f ${root_dir}/docserv-modules/${module} ${root_dir}/docserv-latest/lib/
+	    module_name=${module%$docserv_version*}
+	    if [ ! "${module_name}" == "${last_module_name}" ]
+	    then
+		last_module_name=${module_name}
+		echo ">>>deploying module: ${module}"
+		modulePath=${modulePath}":\$lib_dir/"${module}
+		cp -f ${root_dir}/docserv-modules/${module} ${root_dir}/docserv-latest/lib/
+	    else
+		echo ">>>skipping older verison of module: ${module}"
+	    fi
 	done 
 
 	modulePath="ridl.jar"${modulePath}":"
