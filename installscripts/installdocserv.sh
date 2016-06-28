@@ -32,7 +32,7 @@ then
 else
     if [ ! -d server/docserv-dist/universa ]
     then
-	echo ">>>no docserv found that may be installed" 
+	echo ">>>no docserv found that may be installed" 1>&2
 	exit 9
     fi
     cd docserv-dist/universal
