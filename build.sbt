@@ -1,11 +1,15 @@
 //import com.typesafe.sbt.SbtNativePackager._
 //import com.typesafe.sbt.packager.Keys._
 
-name := "docserv"
+import com.typesafe.config._
+
+val conf = ConfigFactory.parseFile(new File("conf/application.conf")).resolve()
+
+name    := conf.getString("app.name")
+
+version := conf.getString("app.version")
 
 organization := "se.altrusoft"
-
-version := "0.35"
 
 lazy val root = (project in file(".")).enablePlugins(PlayJava)
 

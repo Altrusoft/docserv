@@ -4,15 +4,17 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package se.altrusoft.docserv.controllers;
+package controllers;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Optional;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.io.IOUtils;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -20,6 +22,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fr.opensagres.xdocreport.core.XDocReportException;
+import play.Configuration;
 import play.Logger;
 import play.mvc.BodyParser;
 import play.mvc.BodyParser.Json;
@@ -42,6 +45,13 @@ public class Application extends Controller {
 
 	// TODO: Inject this.
 	public static final DocumentConverter documentConverter = new LibreOfficeDocumentConverter();
+	
+	
+	public static Result index() {
+		String version = Configuration.root().getString("app.version");
+		Collection<PropertiesConfiguration> templateConfigs = templateModelFactory.getTemplateConfigs();
+		return ok(views.html.index.render(version, templateConfigs));
+	}
 
 	@BodyParser.Of(Json.class)
 	public static Result getDocument(String templateName, String encoding) {

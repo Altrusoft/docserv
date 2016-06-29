@@ -1,0 +1,86 @@
+#!/bin/sh
+### BEGIN INIT INFO
+#
+# Provides : PlayApp as a service
+# Required-Start : $remote_fs
+# Required-Stop  : $remote_fs
+# Default-Start     : 2 3 4 5
+# Default-Stop     : 0 1 6
+# Short-Description : Example initscript
+# Description : This file should be used to construct scripts to be placed in '/etc/init.d'.
+#
+### END INIT INFO
+
+
+APPLICATION_NAME="docserv"
+APPLICATION_ARGS="-DapplyEvolutions.default=true"
+USER="notroot"
+USER_HOME="/home/notroot"
+APPLICATION_HOME="${USER_HOME}"
+PIDFILE="${APPLICATION_HOME}/${APPLICATION_NAME}-latest/RUNNING_PID"
+LOG_FILE="${APPLICATION_HOME}/${APPLICATION_NAME}.log"
+    
+# export LC_ALL else openoffice may use en settings on dates etc
+#export LC_ALL={{ localesupport }}
+export LC_ALL="sv_SE.utf8"
+
+RETVAL=0
+
+
+start() {
+    if [ -e $PIDFILE ]; then
+        echo "PlayApp service already started"
+        cat $PIDFILE
+    else
+        cd "${APPLICATION_HOME}/${APPLICATION_NAME}-latest"
+        /bin/su -s /bin/bash $USER -c "bin/${APPLICATION_NAME} ${APPLICATION_ARGS} >> ${LOG_FILE} &" >/dev/nul
+        echo "PlayApp ${APPLICATION_NAME} starting"
+        logger "PlayApp ${APPLICATION_NAME} service started"
+    fi
+}
+
+stop() {
+    if [ -e $PIDFILE ]
+    then
+        pid=$(cat $PIDFILE)
+        kill $pid
+        echo "PlayApp ${APPLICATION_NAME} service (${pid}) stopped"
+        logger "PlayApp ${APPLICATION_NAME} service (${pid}) stopped"
+        #rm $PIDFILE
+    else
+        echo "No PlayApp ${APPLICATION_NAME} services to stopp"
+        logger "No PlayApp ${APPLICATION_NAME} services to stopp"
+    fi
+}
+
+status() {
+    if [ -e $PIDFILE ]
+    then
+        echo "PlayApp ${APPLICATION_NAME} service started"
+    else
+        echo "PlayApp ${APPLICATION_NAME} service NOT started"
+    fi
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    restart)
+        stop
+        sleep 2
+        start
+        ;;
+    status)
+        status
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|restart|status}"
+        exit 1
+esac
+
+exit $RETVAL
+
