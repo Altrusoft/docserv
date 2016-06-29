@@ -60,9 +60,13 @@ cd ${root_dir}
 
 if ${download}
 then
-    mkdir -p docserv-dist/universal
+    mkdir -p docserv-dist
     echo ">>>downloading docserv version: ${version}"
-    cd docserv-dist/universal
+    cd docserv-dist
+    rm -rf universal
+    mkdir -p universal
+    cd universal
+    
     if wget http://maven.altrusoft.se/dists/docserv-${version}.zip
     then
 	echo ">>>Downloaded docserv version: ${version}"
