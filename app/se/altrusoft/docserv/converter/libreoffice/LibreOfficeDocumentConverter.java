@@ -25,7 +25,7 @@ import se.altrusoft.docserv.converter.UnsuportedConversionException;
 public class LibreOfficeDocumentConverter implements DocumentConverter {
 
 	@Override
-	public ByteArrayOutputStream convert(ByteArrayOutputStream documentInStream, MimeType targetMime)
+	public ByteArrayOutputStream convert(byte[] inDocument, MimeType targetMime)
 			throws DocumentConversionException, UnsuportedConversionException {
 
 		// TODO: Currently which conversions that are supported is governed by
@@ -47,7 +47,7 @@ public class LibreOfficeDocumentConverter implements DocumentConverter {
 		OOoInputStream generatedODFInputStream = null;
 		try {
 			convertedOutputStream = null;
-			generatedODFInputStream = new OOoInputStream(documentInStream.toByteArray());
+			generatedODFInputStream = new OOoInputStream(inDocument);
 			convertedOutputStream = new OOoOutputStream();
 			converter.convert(generatedODFInputStream, convertedOutputStream, convertFilterName, filterParameters);
 

@@ -123,7 +123,7 @@ public class Application extends Controller {
 
 				if (mimeType.getConvertFilterName() != null) {
 					Logger.debug("Converting generating document to " + mimeType.getValue() + "...");
-					generatedDocumentOutputStream = documentConverter.convert(generatedDocumentOutputStream, mimeType);
+					generatedDocumentOutputStream = documentConverter.convert(generatedDocumentOutputStream.toByteArray(), mimeType);
 				}
 			} else {
 				String warnMessage = "Unsupported mime-type: " + acceptHeader;
@@ -141,6 +141,50 @@ public class Application extends Controller {
 			Logger.error(errorMessage, e);
 			e.printStackTrace();
 			return internalServerError(errorMessage);
+		} catch (DocumentConversionException e) {
+			String errorMessage = "Unexpected error when converting document";
+			Logger.error(errorMessage, e);
+			e.printStackTrace();
+		} catch (UnsuportedConversionException e) {
+			String errorMessage = "Unsuported output format";
+			Logger.error(errorMessage, e);
+			e.printStackTrace();
+		} finally {
+			IOUtils.closeQuietly(generatedDocumentOutputStream);
+		}
+
+		if (encoding != null && encoding.equalsIgnoreCase(ENCODING_BASE64)) {
+			// TODO: Do this in parallel, i.e. do not produce the ByteArray...
+			byte[] content = generatedDocumentOutputStream.toByteArray();
+			byte[] bs64EncodedContent = new Base64().encode(content);
+			Logger.debug("Returning base 64 encoded content OK");
+			response().setHeader(CONTENT_TRANSFER_ENCODING, ENCODING_BASE64);
+			return ok(new ByteArrayInputStream(bs64EncodedContent)).as(mimeType.getValue());
+		} else {
+			Logger.debug("Returning OK");
+			return ok(new ByteArrayInputStream(generatedDocumentOutputStream.toByteArray())).as(mimeType.getValue());
+		}
+	}
+	
+	public static Result convertDocument(String encoding) {
+
+		String acceptHeader = request().getHeader(ACCEPT);
+
+		MimeType mimeType = MimeType.getMimeType(acceptHeader);
+		ByteArrayOutputStream generatedDocumentOutputStream = null;
+
+		try {
+			if (mimeType != null) {
+				if (mimeType.getConvertFilterName() != null) {
+					Logger.debug("Converting document to " + mimeType.getValue() + "...");
+					generatedDocumentOutputStream = documentConverter.convert(request().body().asRaw().asBytes(), mimeType);
+				}
+			} else {
+				String warnMessage = "Unsupported mime-type: " + acceptHeader;
+				Logger.warn(warnMessage);
+				return badRequest(warnMessage);
+			}
+
 		} catch (DocumentConversionException e) {
 			String errorMessage = "Unexpected error when converting document";
 			Logger.error(errorMessage, e);

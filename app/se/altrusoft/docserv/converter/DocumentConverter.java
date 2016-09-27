@@ -10,7 +10,7 @@ import java.io.ByteArrayOutputStream;
 
 public interface DocumentConverter {
 
-	public ByteArrayOutputStream convert(ByteArrayOutputStream documentInStream, MimeType targetType)
+	public ByteArrayOutputStream convert(byte[] inDocument, MimeType targetType)
 			throws DocumentConversionException, UnsuportedConversionException;
 
 }

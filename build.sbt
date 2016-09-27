@@ -11,7 +11,7 @@ version := conf.getString("app.version")
 
 organization := "se.altrusoft"
 
-lazy val root = (project in file(".")).enablePlugins(PlayJava)
+lazy val root = (project in file(".")).enablePlugins(PlayJava, RpmPlugin)
 
 scalaVersion := "2.11.6"
 
@@ -70,6 +70,18 @@ packageDescription in Linux := "Docserv generates reports from Json data using x
 packageSummary in Linux := "Docserv is a report generator"
 
 maintainer in Debian := "Altrusoft AB <info@altrusoft.se>"
+
+maintainer in Linux := "Altrusoft AB <info@altrusoft.se>"
+
+rpmRelease := "1"
+
+rpmVendor := "altrusoft.se"
+
+rpmVendor in Rpm := "altrusoft.se"
+
+rpmUrl := Some("http://github.com/example/server")
+
+rpmLicense := Some("Apache v2")
 
 publishTo := Some(Resolver.file("file",  new File( "target/repo" )) )
 

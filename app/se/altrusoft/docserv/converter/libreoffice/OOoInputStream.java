@@ -8,6 +8,7 @@ package se.altrusoft.docserv.converter.libreoffice;
 
 import java.io.ByteArrayInputStream;
 
+
 import com.sun.star.io.BufferSizeExceededException;
 import com.sun.star.io.NotConnectedException;
 import com.sun.star.io.XInputStream;
@@ -23,6 +24,24 @@ public class OOoInputStream extends ByteArrayInputStream implements
 	public OOoInputStream(byte[] buf) {
 		super(buf);
 	}
+	
+//	public OOoInputStream(InputStream in) throws IOException {
+//		super(toBuf(in));
+//	}
+//	
+//	private static final byte[] toBuf(InputStream in) throws IOException {
+//		byte[] buff = new byte[8000];
+//
+//        int bytesRead = 0;
+//
+//        ByteArrayOutputStream bao = new ByteArrayOutputStream();
+//
+//        while((bytesRead = in.read(buff)) != -1) {
+//           bao.write(buff, 0, bytesRead);
+//        }
+//
+//        return bao.toByteArray();
+//	}
 
 	//
 	// Implement XInputStream
