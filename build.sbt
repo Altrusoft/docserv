@@ -16,6 +16,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayJava, RpmPlugin)
 scalaVersion := "2.11.6"
 
 libraryDependencies ++= Seq(
+	javaWs,
 	"org.slf4j" % "slf4j-api" % "1.7.5",
 	"fr.opensagres.xdocreport" % "fr.opensagres.xdocreport.core" % "1.0.5",
 	"fr.opensagres.xdocreport" % "fr.opensagres.xdocreport.document" % "1.0.5",

@@ -27,6 +27,7 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.google.inject.Inject;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 
@@ -34,9 +35,7 @@ import play.Application;
 import play.Play;
 import play.libs.F.Callback;
 import play.libs.F.Promise;
-import play.libs.WS;
-import play.libs.WS.Response;
-import play.libs.WS.WSRequestHolder;
+import play.libs.ws.*;
 import play.test.TestBrowser;
 import se.altrusoft.docserv.converter.MimeType;
 
@@ -52,6 +51,8 @@ public class IntegrationTest {
 	private static final int DOCSERVER_PORT = 9000;
 	private static final String DOCSERVER_BASE_URL = "http://localhost:"
 			+ DOCSERVER_PORT;
+	
+	@Inject WSClient ws;
 
 	@Test
 	public void goingToRootShouldShowPageWithListsOfRoutes() {
@@ -134,12 +135,12 @@ public class IntegrationTest {
 									+ jsonParamFilePath + "\": ("
 									+ e.toString() + ")");
 						}
-						WSRequestHolder url = WS.url(DOCSERVER_BASE_URL
+						WSRequest url = ws.url(DOCSERVER_BASE_URL
 								+ "/document/" + templateName);
 						url = url.setHeader("Content-Type", "application/json");
 						url = url.setHeader("Accept", requestedMimeType);
 
-						Promise<Response> response = url.post(jsonParams);
+						Promise<WSResponse> response = url.post(jsonParams);
 						assertEquals(200, response.get(1L, TimeUnit.MINUTES)
 								.getStatus());
 
@@ -160,7 +161,7 @@ public class IntegrationTest {
 					public void invoke(TestBrowser browser) {
 						Application application = Play.application();
 
-						WSRequestHolder url = WS.url(DOCSERVER_BASE_URL
+						WSRequest url = ws.url(DOCSERVER_BASE_URL
 								+ "/assets/templates/Invoice/template.odt");
 						// TODO: strange that these headers do not matter
 						// (default
@@ -174,7 +175,7 @@ public class IntegrationTest {
 						// url = url.setHeader("Accept",
 						// "application/vnd.oasis.opendocument.text;charset=UTF-8");
 
-						Promise<Response> response = url.get();
+						Promise<WSResponse> response = url.get();
 						assertEquals(200, response.get(1L, TimeUnit.MINUTES)
 								.getStatus());
 
@@ -187,14 +188,14 @@ public class IntegrationTest {
 	}
 
 	void assertResponseEqualsFileContent(File expectedFile,
-			Promise<Response> response, boolean onlyVerifySize) {
+			Promise<WSResponse> response, boolean onlyVerifySize) {
 		FileInputStream expectedInputStream = null;
 		InputStream actualInputStream = null;
 		try {
 			expectedInputStream = FileUtils.openInputStream(expectedFile);
 			byte[] expectedByteArray = IOUtils.toByteArray(expectedInputStream);
 
-			actualInputStream = response.get().getBodyAsStream();
+			actualInputStream = response.get(3000L).getBodyAsStream();
 			byte[] actualByteArray = IOUtils.toByteArray(actualInputStream);
 
 			// We only verify PDF files by raw text. This because we are
