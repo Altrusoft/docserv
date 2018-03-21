@@ -12,13 +12,13 @@ import java.io.FileNotFoundException;
 
 import org.junit.Test;
 
-public class ODSProcessorTest {
+public class ODTProcessorTest {
 
 	@Test
 	public void test_markup() {
 		try {
-			ODSProcessor
-					.transformODS(
+			ODTProcessor
+					.transformODT(
 							"test/se/altrusoft/docserv/odsprocessor/test_markup_input.ods",
 							"target/test-classes/out/se/altrusoft/docserv/odsprocessor/test_markup_output.ods",
 							new MarkupODSProcessor());
@@ -31,11 +31,26 @@ public class ODSProcessorTest {
 	@Test
 	public void simpleODSProcessorShouldWork() {
 		try {
-			ODSProcessor
-					.transformODS(
+			ODTProcessor
+					.transformODT(
 							"test/se/altrusoft/docserv/odsprocessor/test_floatification_input.ods",
 							"target/test-classes/out/se/altrusoft/docserv/odsprocessor/test_floatification_output.ods",
 							new SimpleODSProcessor());
+		} catch (FileNotFoundException e) {
+			fail("No such file");
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void imageUrlODTProcessorShouldWork() {
+		try {
+			String imageSpecifcation = "{ \"url\" : \"http://www.altrusoft.se/wp-content/uploads/2017/04/etik.png\" }";
+			ODTProcessor
+					.transformODT(
+							"test/se/altrusoft/docserv/odsprocessor/image_document.odt",
+							"target/test-classes/out/se/altrusoft/docserv/odsprocessor/image_document_output.ods",
+							new ImageUrlODTProcessor(imageSpecifcation));
 		} catch (FileNotFoundException e) {
 			fail("No such file");
 			e.printStackTrace();

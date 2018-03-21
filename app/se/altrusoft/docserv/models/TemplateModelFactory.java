@@ -32,11 +32,15 @@ public class TemplateModelFactory {
 	public Collection<PropertiesConfiguration> getTemplateConfigs() {
 		return templateConfigs.values();
 	}
-
+	
 	public TemplateModelFactory() {
+		this(new ResourceFilter().packageName("public.templates.*"));
+	}
+
+	public TemplateModelFactory(ResourceFilter resourceFilter) {
 		templateConfigs = new HashMap<>();
 		List<URL> templateModelConfigFiles = CPScanner
-				.scanResources(new ResourceFilter().packageName("public.templates.*").resourceName("template*.config"));
+				.scanResources(resourceFilter.resourceName("template*.config"));
 		for (URL u : templateModelConfigFiles) {
 			try {
 				InputStream in = u.openStream();

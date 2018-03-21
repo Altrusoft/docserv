@@ -35,22 +35,22 @@ import org.apache.commons.io.IOUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-public class ODSProcessor {
+public class ODTProcessor {
 
 	public static final String CONTENT_FILE = "content.xml";
 
-	public static void transformODS(String inputFileName,
+	public static void transformODT(String inputFileName,
 			String outputFileName, DOMTransformer contentTransformer)
 			throws FileNotFoundException {
 		File inputFile = new File(inputFileName);
 		File outputFile = new File(outputFileName);
 		outputFile.getParentFile().mkdirs();
 		
-		transformODS(new FileInputStream(inputFile), new FileOutputStream(
+		transformODT(new FileInputStream(inputFile), new FileOutputStream(
 				outputFile), contentTransformer);
 	}
 
-	public static void transformODS(InputStream inputStream,
+	public static void transformODT(InputStream inputStream,
 			OutputStream outputStream, DOMTransformer contentTransformer) {
 		ZipInputStream zipInputStream = null;
 		ZipOutputStream zipOutputStream = null;

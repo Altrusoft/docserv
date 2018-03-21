@@ -26,7 +26,7 @@ import fr.opensagres.xdocreport.template.TemplateEngineKind;
 import play.Logger;
 import play.Play;
 import se.altrusoft.docserv.odsprocessor.DOMTransformer;
-import se.altrusoft.docserv.odsprocessor.ODSProcessor;
+import se.altrusoft.docserv.odsprocessor.ODTProcessor;
 
 public abstract class TemplateModel {
 
@@ -71,12 +71,16 @@ public abstract class TemplateModel {
 		Field field = getDeclaredField(fieldName);
 		return (field.get(this) instanceof List<?>);
 	}
-
+	
 	public ByteArrayOutputStream generateDocument() throws XDocReportException, IOException {
+		return generateDocument(Play.application());
+	}
+
+	public ByteArrayOutputStream generateDocument(play.Application application) throws XDocReportException, IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		InputStream in = null;
 		try {
-			in = Play.application().resourceAsStream(getTemplateFileName());
+			in = application.resourceAsStream(getTemplateFileName());
 
 			IXDocReport report = null;
 			if (TemplateType.VELOCITY.equals(this.getTemplateType())) {
@@ -92,7 +96,7 @@ public abstract class TemplateModel {
 				ByteArrayOutputStream tempOutputStream = new ByteArrayOutputStream();
 				report.process(context, tempOutputStream);
 				InputStream tempInputStream = new ByteArrayInputStream(tempOutputStream.toByteArray());
-				ODSProcessor.transformODS(tempInputStream, out, this.getPostProcessor());
+				ODTProcessor.transformODT(tempInputStream, out, this.getPostProcessor());
 			} else {
 				report.process(context, out);
 			}
