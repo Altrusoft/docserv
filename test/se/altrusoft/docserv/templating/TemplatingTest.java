@@ -20,11 +20,16 @@ import org.junit.Test;
 import net.sf.corn.cps.ResourceFilter;
 import play.Logger;
 import play.test.FakeApplication;
+import se.altrusoft.docserv.converter.DocumentConverter;
+import se.altrusoft.docserv.converter.MimeType;
+import se.altrusoft.docserv.converter.libreoffice.LibreOfficeDocumentConverter;
 import se.altrusoft.docserv.models.TemplateModel;
 import se.altrusoft.docserv.models.TemplateModelFactory;
 import se.altrusoft.docserv.odtprocessor.ImageUrlODTProcessor;
 
 public class TemplatingTest {
+
+	public static final DocumentConverter documentConverter = new LibreOfficeDocumentConverter();
 
 	@Test
 	public void test_template_model_loaded() {
@@ -40,9 +45,12 @@ public class TemplatingTest {
 			FakeApplication application = fakeApplication();
 			InputStream in = application.resourceAsStream(templateModel.getTemplateFileName());
 			ByteArrayOutputStream generatedDocumentOutputStream = templateModel.generateDocument(application);
+			MimeType mimeType = MimeType.getMimeType("application/pdf");
+			generatedDocumentOutputStream = documentConverter.convert(generatedDocumentOutputStream.toByteArray(),
+				mimeType);
 			byte[] output = generatedDocumentOutputStream.toByteArray();
 			File outputFile = new File(
-				"target/test-classes/out/se/altrusoft/docserv/odsprocessor/test_template_output.odt");
+				"target/test-classes/out/se/altrusoft/docserv/templating/test_template_output.pdf");
 			outputFile.getParentFile().mkdirs();
 			FileOutputStream outputFileSteam = new FileOutputStream(outputFile);
 			outputFileSteam.write(output);
