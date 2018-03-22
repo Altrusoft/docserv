@@ -14,7 +14,7 @@ public enum MimeType {
 			// Generate PDF/A
 			put("SelectPdfVersion", 1);
 		}
-	}), ODS("application/vnd.oasis.opendocument.spreadsheet"), ODT("application/vnd.oasis.opendocument.text"),
+	}), ODS("application/vnd.oasis.opendocument.spreadsheet", "calc8"), ODT("application/vnd.oasis.opendocument.text", "writer8"),
 	XLS("application/vnd.ms-excel", "MS Excel 97"),
 	DOCX("application/vnd.openxmlformats-officedocument.wordprocessingml.document", "MS Word 2007 XML");
 

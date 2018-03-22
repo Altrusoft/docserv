@@ -1,8 +1,7 @@
 /*
- * Copyright (c) 2013 Altrusoft AB.
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Copyright (c) 2013 Altrusoft AB. This Source Code Form is subject to the terms of the Mozilla
+ * Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+ * one at http://mozilla.org/MPL/2.0/.
  */
 package se.altrusoft.docserv.models;
 
@@ -25,8 +24,8 @@ import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
 import play.Logger;
 import play.Play;
-import se.altrusoft.docserv.odsprocessor.DOMTransformer;
-import se.altrusoft.docserv.odsprocessor.ODTProcessor;
+import se.altrusoft.docserv.odtprocessor.DOMTransformer;
+import se.altrusoft.docserv.odtprocessor.ODTProcessor;
 
 public abstract class TemplateModel {
 
@@ -35,6 +34,7 @@ public abstract class TemplateModel {
 	private Resource templateFile;
 	private String templateFileName;
 
+	private DOMTransformer preProcessor;
 	private DOMTransformer postProcessor;
 	private TemplateType templateType;
 	private Properties properties;
@@ -71,17 +71,20 @@ public abstract class TemplateModel {
 		Field field = getDeclaredField(fieldName);
 		return (field.get(this) instanceof List<?>);
 	}
-	
+
 	public ByteArrayOutputStream generateDocument() throws XDocReportException, IOException {
 		return generateDocument(Play.application());
 	}
 
-	public ByteArrayOutputStream generateDocument(play.Application application) throws XDocReportException, IOException {
+	public ByteArrayOutputStream generateDocument(play.Application application)
+		throws XDocReportException, IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		InputStream in = null;
 		try {
 			in = application.resourceAsStream(getTemplateFileName());
-
+			if (this.getPreProcessor() != null) {
+				in = ODTProcessor.transformODT(in, this.getPreProcessor());
+			}
 			IXDocReport report = null;
 			if (TemplateType.VELOCITY.equals(this.getTemplateType())) {
 				report = XDocReportRegistry.getRegistry().loadReport(in, TemplateEngineKind.Velocity);
@@ -160,6 +163,14 @@ public abstract class TemplateModel {
 
 	public void setTemplateFile(Resource templateFile) {
 		this.templateFile = templateFile;
+	}
+
+	public DOMTransformer getPreProcessor() {
+		return preProcessor;
+	}
+
+	public void setPreProcessor(DOMTransformer preProcessor) {
+		this.preProcessor = preProcessor;
 	}
 
 	public DOMTransformer getPostProcessor() {

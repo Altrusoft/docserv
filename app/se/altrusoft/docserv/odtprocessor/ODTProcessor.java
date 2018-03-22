@@ -1,10 +1,9 @@
 /*
- * Copyright (c) 2013 Altrusoft AB.
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Copyright (c) 2013 Altrusoft AB. This Source Code Form is subject to the terms of the Mozilla
+ * Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+ * one at http://mozilla.org/MPL/2.0/.
  */
-package se.altrusoft.docserv.odsprocessor;
+package se.altrusoft.docserv.odtprocessor;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -39,28 +38,30 @@ public class ODTProcessor {
 
 	public static final String CONTENT_FILE = "content.xml";
 
-	public static void transformODT(String inputFileName,
-			String outputFileName, DOMTransformer contentTransformer)
-			throws FileNotFoundException {
+	public static InputStream transformODT(InputStream inputStream, DOMTransformer contentTransformer) {
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		transformODT(inputStream, outputStream, contentTransformer);
+		return new ByteArrayInputStream(outputStream.toByteArray());
+	}
+
+	public static void transformODT(String inputFileName, String outputFileName, DOMTransformer contentTransformer)
+		throws FileNotFoundException {
 		File inputFile = new File(inputFileName);
 		File outputFile = new File(outputFileName);
 		outputFile.getParentFile().mkdirs();
-		
-		transformODT(new FileInputStream(inputFile), new FileOutputStream(
-				outputFile), contentTransformer);
+
+		transformODT(new FileInputStream(inputFile), new FileOutputStream(outputFile), contentTransformer);
 	}
 
-	public static void transformODT(InputStream inputStream,
-			OutputStream outputStream, DOMTransformer contentTransformer) {
+	public static void transformODT(InputStream inputStream, OutputStream outputStream,
+		DOMTransformer contentTransformer) {
 		ZipInputStream zipInputStream = null;
 		ZipOutputStream zipOutputStream = null;
 		try {
-			zipInputStream = new ZipInputStream(new BufferedInputStream(
-					inputStream));
+			zipInputStream = new ZipInputStream(new BufferedInputStream(inputStream));
 			zipOutputStream = new ZipOutputStream(outputStream);
 
-			for (ZipEntry zipInputEntry; (zipInputEntry = zipInputStream
-					.getNextEntry()) != null;) {
+			for (ZipEntry zipInputEntry; (zipInputEntry = zipInputStream.getNextEntry()) != null;) {
 				ZipEntry zipOutputEntry = null;
 				InputStream zipEntrySource = null;
 
@@ -70,8 +71,7 @@ public class ODTProcessor {
 
 					// Found Content File
 
-					DocumentBuilderFactory dbFactory = DocumentBuilderFactory
-							.newInstance();
+					DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 					DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 
 					// Build a DOM from the original content found in
@@ -83,8 +83,7 @@ public class ODTProcessor {
 					// in a new input
 					// stream...
 
-					Document domdoc = dBuilder.parse(new ByteArrayInputStream(
-							IOUtils.toByteArray(zipInputStream)));
+					Document domdoc = dBuilder.parse(new ByteArrayInputStream(IOUtils.toByteArray(zipInputStream)));
 					domdoc.getDocumentElement().normalize();
 
 					// Perform transformation of DOM:
@@ -93,10 +92,8 @@ public class ODTProcessor {
 					// Finally serialize the DOM now containing transformed
 					// content.
 
-					TransformerFactory transformerFactory = TransformerFactory
-							.newInstance();
-					Transformer transformer = transformerFactory
-							.newTransformer();
+					TransformerFactory transformerFactory = TransformerFactory.newInstance();
+					Transformer transformer = transformerFactory.newTransformer();
 					DOMSource domSource = new DOMSource(domdoc);
 
 					ByteArrayOutputStream transformedContent = new ByteArrayOutputStream();
@@ -104,12 +101,10 @@ public class ODTProcessor {
 					transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 					transformer.transform(domSource, result);
 
-					byte transformedContentBytes[] = transformedContent
-							.toByteArray();
+					byte transformedContentBytes[] = transformedContent.toByteArray();
 					zipOutputEntry = new ZipEntry(zipInputEntry.getName());
 					zipOutputEntry.setSize(transformedContentBytes.length);
-					zipEntrySource = new ByteArrayInputStream(
-							transformedContentBytes);
+					zipEntrySource = new ByteArrayInputStream(transformedContentBytes);
 
 				} else {
 					zipOutputEntry = zipInputEntry;

@@ -21,9 +21,9 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import net.sf.corn.cps.CPScanner;
 import net.sf.corn.cps.ResourceFilter;
 import play.Logger;
-import se.altrusoft.docserv.odsprocessor.DOMTransformer;
-import se.altrusoft.docserv.odsprocessor.MarkupODSProcessor;
-import se.altrusoft.docserv.odsprocessor.SimpleODSProcessor;
+import se.altrusoft.docserv.odtprocessor.DOMTransformer;
+import se.altrusoft.docserv.odtprocessor.MarkupODSProcessor;
+import se.altrusoft.docserv.odtprocessor.SimpleODSProcessor;
 
 public class TemplateModelFactory {
 

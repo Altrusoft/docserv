@@ -4,7 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package se.altrusoft.docserv.odsprocessor;
+package se.altrusoft.docserv.odtprocessor;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
